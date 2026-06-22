@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Franquicias propias · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 2 de 9',
+        title: 'Franquicias propias',
+        subtitle: 'Modelo de negocio estratégico: propios vs franquicias, retorno a escala y escenarios de expansión.',
+        meta: [' 2020–2026p', ' Modelo financiero real'],
+        kpis: [
+            {
+                label: 'Margen real propios',
+                value: '35%',
+                sub: 'Verificado con plantilla y costes reales',
+                mod: 'highlight'
+            },
+            {label: 'Royalty franquicia', value: '8%', sub: 'Flat, sin costes operativos para el holding'},
+            {
+                label: 'Ventaja propio vs franquicia',
+                value: '4,4x',
+                sub: '€202K/año propio vs €46K/año franquicia',
+                valueClass: 'green'
+            },
+            {
+                label: 'Techo royalties red actual',
+                value: '€1,70M',
+                sub: 'Solo la escala (nuevas franquicias) lo mueve',
+                valueClass: 'amber'
+            },
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-modelo">
+        <button class="tab-btn" data-tab="t-holding">Ingresos holding</button>
+        <button class="tab-btn" data-tab="t-salud">Salud franquicias</button>
+        <button class="tab-btn" data-tab="t-maduracion">Maduración</button>
+        <button class="tab-btn" data-tab="t-escala">Modelo a escala</button>
+    </div>
+
+    <div class="tab-content" id="t-holding">
+        <div class="chart-card">
+            <div class="chart-title">Ingresos holding: propios vs royalties 2020–2025 (€)</div>
+            <div style="height:260px">
+                <canvas id="holdingStack"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Centros propios (35% margen)</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#9FE1CB"></span>Royalties franquicias (8%)</span>
+            </div>
+        </div>
+        <div class="insight blue">
+            <div class="insight-title">📊 Los propios crecen 4x más rápido que los royalties</div>
+            <div class="insight-body">En 2026: propios suman +€369K de beneficio adicional. Los royalties solo +€79K.
+                Cada €1 de nueva facturación en un propio genera €0,37 de beneficio. En una franquicia genera €0,08.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="t-salud">
+        <div class="chart-card">
+            <div class="chart-title">Distribución franquicias por tier — royalties 2025 (€)</div>
+            <div class="chart-sub">Tier A >€1M · Tier B €500K–1M · Tier C €200K–500K</div>
+            <div style="height:240px">
+                <canvas id="tierChart"></canvas>
+            </div>
+        </div>
+        <div class="insight amber">
+            <div class="insight-title">⚠️ El Tier B es el motor real — y 5 centros están en alerta</div>
+            <div class="insight-body">17 centros Tier B generan €1,00M de los €1,70M totales en royalties (59%).
+                Granollers, Sant Cugat, Mataró, Zaragoza y Sant Antoni están en caída. Su deterioro supondría hasta
+                €150K menos en royalties anuales.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="t-maduracion">
+        <div class="chart-card">
+            <div class="chart-title">Curva de maduración real — facturación y royalty por año desde apertura (€)</div>
+            <div class="chart-sub">Basado en Sant Antoni, Vilanova, León, Figueres, Mollet, Albacete</div>
+            <div style="height:240px">
+                <canvas id="matChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#85B7EB"></span>Facturación media</span>
+                <span class="chart-legend-item"><span class="legend-dot"
+                                                      style="background:#3B6D11"></span>Royalty 8%</span>
+            </div>
+        </div>
+        <div class="surface-card mt-12">
+            <p class="chart-title mb-8">Conclusión sobre maduración</p>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.6">Las franquicias se estabilizan en el <strong>año
+                3</strong> (~€411K de facturación). El fee de entrada de €100K tarda 8,6 años en recuperarse solo con
+                royalties, pero en el año 1 ya genera €112K entre royalty y fee. La estrategia de Madrid con 10
+                franquicias/año generaría <strong>€1,48M/año en royalties al año 5</strong>.</p>
+        </div>
+    </div>
+
+    <div class="tab-content" id="t-escala">
+        <div class="chart-card">
+            <div class="chart-title">Proyección ingresos holding — tres escenarios a 5 años (€)</div>
+            <div style="height:260px">
+                <canvas id="escalaChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Solo propios (+2/año)</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#D4537E"></span>Solo franquicias (+10/año)</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#3B6D11"></span>Híbrido (+1P +10F/año)</span>
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ El modelo híbrido es el óptimo</div>
+            <div class="insight-body">Propios para rentabilidad (35% margen). Franquicias para escala capital-light (€0
+                inversión, €6,8M en fees de entrada con 68 nuevas). La combinación de los dos es lo que hace el modelo
+                robusto y resistente a riesgos operativos.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const yrs = ['2020', '2021', '2022', '2023', '2024', '2025'];
+
+        new Chart(document.getElementById('holdingStack'), {
+            type: 'bar',
+            data: {
+                labels: yrs, datasets: [
+                    {
+                        label: 'Propios',
+                        data: [3855862, 4719546, 4471196, 4879848, 5271554, 5785799],
+                        backgroundColor: 'rgba(24,95,165,.85)',
+                        borderRadius: 4,
+                        stack: 's'
+                    },
+                    {
+                        label: 'Royalties',
+                        data: [910444, 1169467, 1221190, 1353087, 1541962, 1702363],
+                        backgroundColor: 'rgba(159,225,203,.85)',
+                        borderRadius: 4,
+                        stack: 's'
+                    }
+                ]
+            },
+            options: opts(fmt.M, {stacked: true})
+        });
+
+        new Chart(document.getElementById('tierChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Tier A (4 centros)', 'Tier B (17 centros)', 'Tier C (11 centros)'], datasets: [
+                    {
+                        label: 'Facturación',
+                        data: [4717808, 12511086, 4050648],
+                        backgroundColor: 'rgba(181,212,244,.6)',
+                        borderRadius: 4,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Royalties',
+                        data: [377425, 1000887, 324052],
+                        backgroundColor: ['#0C447C', '#185FA5', '#85B7EB'],
+                        borderRadius: 4,
+                        yAxisID: 'y2'
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, animation: {duration: 600},
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        ...chartDefaults.plugins.tooltip,
+                        callbacks: {label: ctx => ctx.dataset.label + ': ' + fmt.K(ctx.raw)}
+                    }
+                },
+                scales: {
+                    x: {grid: {display: false}, ticks: {color: '#9B9890', font: {size: 11}}, border: {display: false}},
+                    y: {
+                        position: 'left',
+                        grid: {color: 'rgba(226,223,216,.6)'},
+                        ticks: {color: '#9B9890', font: {size: 11}, callback: v => fmt.M(v)},
+                        border: {display: false}
+                    },
+                    y2: {
+                        position: 'right',
+                        grid: {display: false},
+                        ticks: {color: '#185FA5', font: {size: 11}, callback: v => fmt.K(v)},
+                        border: {display: false}
+                    }
+                }
+            }
+        });
+
+        const matMean = [144938, 297048, 411060, 470897, 527346];
+        new Chart(document.getElementById('matChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Año 1', 'Año 2', 'Año 3 ★', 'Año 4', 'Año 5'], datasets: [
+                    {
+                        label: 'Facturación',
+                        data: matMean,
+                        backgroundColor: matMean.map((_, i) => i === 2 ? 'rgba(24,95,165,.85)' : 'rgba(133,183,235,.7)'),
+                        borderRadius: 4,
+                        order: 2
+                    },
+                    {
+                        label: 'Royalty',
+                        data: matMean.map(v => Math.round(v * .08)),
+                        type: 'line',
+                        borderColor: '#3B6D11',
+                        backgroundColor: 'transparent',
+                        pointBackgroundColor: '#3B6D11',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        fill: false,
+                        order: 1
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        const baseOwn = 1446450;
+        const scA = [baseOwn, baseOwn + 300000, baseOwn + 600000, baseOwn + 900000, baseOwn + 1200000];
+        const scB = [1700000, 1815950, 2053588, 2382436, 2759154];
+        const scC = scA.map((v, i) => v + (scB[i] - 1700000));
+        new Chart(document.getElementById('escalaChart'), {
+            type: 'line',
+            data: {
+                labels: ['Año 0', 'Año 1', 'Año 2', 'Año 3', 'Año 4'], datasets: [
+                    {
+                        label: 'Solo propios',
+                        data: scA,
+                        borderColor: '#185FA5',
+                        backgroundColor: 'rgba(24,95,165,.05)',
+                        pointBackgroundColor: '#185FA5',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: .3
+                    },
+                    {
+                        label: 'Solo franquicias',
+                        data: scB,
+                        borderColor: '#D4537E',
+                        backgroundColor: 'rgba(212,83,126,.05)',
+                        pointBackgroundColor: '#D4537E',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: .3
+                    },
+                    {
+                        label: 'Híbrido',
+                        data: scC,
+                        borderColor: '#3B6D11',
+                        backgroundColor: 'rgba(59,109,17,.07)',
+                        pointBackgroundColor: '#3B6D11',
+                        borderWidth: 2.5,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: .3
+                    }
+                ]
+            },
+            options: opts(fmt.M)
+        });
+    </script>
+</div>
+</body>
+</html>

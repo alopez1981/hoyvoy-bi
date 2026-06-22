@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Tiempo medio hasta €400K · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 5 de 9',
+        title: 'Tiempo medio hasta €400K',
+        subtitle: 'Cuánto tarda un centro en alcanzar los €400K de facturación anual — umbral de rentabilidad sólida.',
+        meta: [' Datos 2015–2025', ' Fuente: Google Sheets resultado histórico'],
+        kpis: [
+            {label: 'Tiempo medio red', value: '3,6 años', sub: 'Basado en 9 centros con datos completos'},
+            {label: 'Mediana', value: '3 años', sub: 'El 50% llega antes del año 3', valueClass: 'green'},
+            {
+                label: 'Más rápidos (2 años)',
+                value: 'Santander · Vic',
+                sub: 'Mercados con alta demanda inicial',
+                valueClass: 'green'
+            },
+            {
+                label: 'Caso irregular',
+                value: 'Alcorcón',
+                sub: '6 años y aún no llega. No es normal.',
+                valueClass: 'red'
+            },
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-400">
+        <button class="tab-btn" data-tab="t4-traj">Trayectorias reales</button>
+        <button class="tab-btn" data-tab="t4-tabla">Tabla por centro</button>
+        <button class="tab-btn" data-tab="t4-dist">Distribución</button>
+    </div>
+
+    <div class="tab-content" id="t4-traj">
+        <div class="chart-card">
+            <div class="chart-title">Trayectorias reales — facturación por año desde apertura (€) · Línea roja = €400K
+            </div>
+            <div style="height:300px">
+                <canvas id="trajChart"></canvas>
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ El 50% llega en 3 años o menos — si la trayectoria es limpia</div>
+            <div class="insight-body">Sant Antoni, Vilanova y Mollet lo lograron en el año 3. Santander y Vic en el año
+                2. En común: crecimiento ininterrumpido sin caídas intermedias. Una caída en año 2-3 añade 1-2 años más.
+            </div>
+        </div>
+        <div class="insight red mt-8">
+            <div class="insight-title">🔴 Alcorcón: 6 años y sin llegar — caso patológico</div>
+            <div class="insight-body">Ha caído 3 veces en 6 años sin recuperación sostenida. Proyección: llega a €400K
+                en el año 9 (~2028). El único centro donde la trayectoria no sigue el patrón normal de maduración.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="t4-tabla">
+        <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Centro</th>
+                    <th>Tipo</th>
+                    <th>Año 1</th>
+                    <th>Año 2</th>
+                    <th>Año 3</th>
+                    <th>Año 4</th>
+                    <th>Año 5</th>
+                    <th>→ €400K</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="strong">Santander</td>
+                    <td><span class="badge dark">Propio</span></td>
+                    <td>€280K</td>
+                    <td class="text-green font-bold">€439K ✅</td>
+                    <td>€381K</td>
+                    <td>€492K</td>
+                    <td>€584K</td>
+                    <td><span class="badge green">2 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Vic</td>
+                    <td><span class="badge blue">Franquicia</span></td>
+                    <td>€287K</td>
+                    <td class="text-green font-bold">€443K ✅</td>
+                    <td>€472K</td>
+                    <td>€521K</td>
+                    <td>€613K</td>
+                    <td><span class="badge green">2 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Sant Antoni</td>
+                    <td><span class="badge blue">Franquicia</span></td>
+                    <td>€164K</td>
+                    <td>€392K</td>
+                    <td class="text-green font-bold">€617K ✅</td>
+                    <td>€782K</td>
+                    <td>€744K</td>
+                    <td><span class="badge green">3 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Vilanova</td>
+                    <td><span class="badge blue">Franquicia</span></td>
+                    <td>€39K</td>
+                    <td>€271K</td>
+                    <td class="text-green font-bold">€408K ✅</td>
+                    <td>€535K</td>
+                    <td>€539K</td>
+                    <td><span class="badge green">3 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Mollet</td>
+                    <td><span class="badge blue">Franquicia</span></td>
+                    <td>€159K</td>
+                    <td>€343K</td>
+                    <td class="text-green font-bold">€409K ✅</td>
+                    <td>€480K</td>
+                    <td>—</td>
+                    <td><span class="badge green">3 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Pamplona</td>
+                    <td><span class="badge dark">Propio</span></td>
+                    <td>€126K</td>
+                    <td>€329K</td>
+                    <td>€374K</td>
+                    <td class="text-green font-bold">€435K ✅</td>
+                    <td>€558K</td>
+                    <td><span class="badge blue">4 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">León</td>
+                    <td><span class="badge blue">Franquicia</span></td>
+                    <td>€141K</td>
+                    <td>€243K</td>
+                    <td>€311K</td>
+                    <td class="text-green font-bold">€412K ✅</td>
+                    <td>€482K</td>
+                    <td><span class="badge blue">4 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Sant Boi</td>
+                    <td><span class="badge blue">Franquicia</span></td>
+                    <td>€221K</td>
+                    <td>€360K</td>
+                    <td>€296K</td>
+                    <td>€315K</td>
+                    <td class="text-amber font-bold">€446K ✅</td>
+                    <td><span class="badge amber">5 años</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Pozuelo</td>
+                    <td><span class="badge dark">Propio</span></td>
+                    <td>€119K</td>
+                    <td>€212K</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td><span class="badge amber">~4 años 📊</span></td>
+                </tr>
+                <tr>
+                    <td class="strong">Alcorcón</td>
+                    <td><span class="badge dark">Propio</span></td>
+                    <td>€149K</td>
+                    <td>€127K</td>
+                    <td>€108K</td>
+                    <td>€175K</td>
+                    <td>€152K</td>
+                    <td><span class="badge red">~9 años ⚠️</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-content" id="t4-dist">
+        <div class="chart-card">
+            <div class="chart-title">Distribución — % centros que alcanzan €400K por año desde apertura</div>
+            <div style="height:240px">
+                <canvas id="distChart"></canvas>
+            </div>
+        </div>
+        <div class="surface-card mt-12">
+            <p class="chart-title mb-8">Aplicado a Madrid (Pozuelo, Alcorcón y nuevas franquicias)</p>
+            <div class="col-2" style="margin-top:10px">
+                <div><p style="font-size:12px;font-weight:600;color:var(--green);margin:0 0 4px">Pozuelo (propio, año
+                    2)</p>
+                    <p style="font-size:12px;color:var(--text-2)">€212K en año 2. Proyección: €400K en año 4 (~2027).
+                        Trayectoria limpia sin caídas. Consistente con la mediana de la red.</p></div>
+                <div><p style="font-size:12px;font-weight:600;color:var(--red);margin:0 0 4px">Alcorcón (propio, año
+                    6)</p>
+                    <p style="font-size:12px;color:var(--text-2)">€201K en año 6. Fuera de cualquier patrón normal.
+                        Requiere diagnóstico específico, no más tiempo.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const trajs = [
+            {n: 'Santander', d: [280285, 438647, 380992, 492375, 583838], c: 'rgba(24,95,165,.9)'},
+            {n: 'Vic', d: [287168, 442831, 471966, 521377, 612723], c: 'rgba(55,138,221,.8)'},
+            {n: 'Sant Antoni', d: [164321, 392118, 617420, 782338, 744428], c: 'rgba(59,109,17,.9)'},
+            {n: 'Vilanova', d: [39420, 270637, 407501, 535346, 539229], c: 'rgba(159,225,203,.9)'},
+            {n: 'Mollet', d: [158694, 343071, 408881, 479805, null], c: 'rgba(186,117,23,.8)'},
+            {n: 'Pamplona', d: [126156, 329218, 374046, 434751, 558092], c: 'rgba(212,83,126,.7)'},
+            {n: 'Alcorcón', d: [149252, 126880, 108356, 175225, 151647], c: 'rgba(226,75,74,.7)'},
+        ];
+        new Chart(document.getElementById('trajChart'), {
+            type: 'line',
+            data: {
+                labels: ['Año 1', 'Año 2', 'Año 3', 'Año 4', 'Año 5'], datasets: [
+                    {
+                        label: '€400K',
+                        data: [400000, 400000, 400000, 400000, 400000],
+                        borderColor: 'rgba(226,75,74,.4)',
+                        borderDash: [6, 4],
+                        borderWidth: 1.5,
+                        pointRadius: 0,
+                        fill: false,
+                        order: 0
+                    },
+                    ...trajs.map(t => ({
+                        label: t.n,
+                        data: t.d,
+                        borderColor: t.c,
+                        backgroundColor: 'transparent',
+                        borderWidth: 1.5,
+                        pointBackgroundColor: t.c,
+                        pointRadius: 3,
+                        fill: false,
+                        tension: .3,
+                        spanGaps: true
+                    }))
+                ]
+            },
+            options: opts(fmt.K, {
+                legend: {display: true, position: 'bottom', labels: {font: {size: 10}, boxWidth: 10, padding: 8}},
+                tooltip: {callbacks: {label: ctx => ctx.dataset.label + (ctx.raw ? ': ' + fmt.K(ctx.raw) : '')}}
+            })
+        });
+
+        new Chart(document.getElementById('distChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Año 2', 'Año 3', 'Año 4', 'Año 5', 'Año 6+'], datasets: [
+                    {
+                        label: 'Centros',
+                        data: [2, 5, 7, 8, 9],
+                        backgroundColor: 'rgba(24,95,165,.75)',
+                        borderRadius: 4,
+                        order: 2
+                    },
+                    {
+                        label: '% acumulado',
+                        data: [22, 56, 78, 89, 100],
+                        type: 'line',
+                        borderColor: '#3B6D11',
+                        backgroundColor: 'transparent',
+                        pointBackgroundColor: '#3B6D11',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        yAxisID: 'y2',
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, animation: {duration: 600},
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        ...chartDefaults.plugins.tooltip,
+                        callbacks: {label: ctx => ctx.dataset.yAxisID === 'y2' ? ctx.raw + '%' : ctx.raw + ' centros'}
+                    }
+                },
+                scales: {
+                    x: {grid: {display: false}, ticks: {color: '#9B9890', font: {size: 11}}, border: {display: false}},
+                    y: {
+                        position: 'left',
+                        grid: {color: 'rgba(226,223,216,.6)'},
+                        ticks: {color: '#9B9890', font: {size: 11}},
+                        border: {display: false},
+                        title: {display: true, text: 'Nº centros', color: '#9B9890', font: {size: 10}}
+                    },
+                    y2: {
+                        position: 'right',
+                        grid: {display: false},
+                        ticks: {color: '#3B6D11', font: {size: 11}, callback: v => v + '%'},
+                        border: {display: false},
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

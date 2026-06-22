@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Dinero no ganado: franquicias · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 8 de 9',
+        title: 'Dinero dejado de ganar — franquicias 2015–2025',
+        subtitle: 'Royalties cobrados vs potencial si la red hubiera crecido a su propio ritmo histórico. Tres vectores: caídas directas, estancamiento y picos no recuperados.',
+        meta: [' 2015–2025', ' 32 franquicias analizadas'],
+        kpis: [
+            {
+                label: 'Royalties cobrados 2015–2025',
+                value: '€9,93M',
+                sub: 'Lo que el holding ha ingresado realmente',
+                mod: 'highlight'
+            },
+            {
+                label: 'Dejado de ganar — caídas (V1)',
+                value: '€204K',
+                sub: 'Años donde la facturación bajó vs año anterior',
+                valueClass: 'red'
+            },
+            {
+                label: 'Dejado de ganar — estancamiento (V2)',
+                value: '€23,3M',
+                sub: 'Centros maduros que no crecieron al ritmo de la red',
+                valueClass: 'red'
+            },
+            {
+                label: 'Total dejado de ganar',
+                value: '€23,5M',
+                sub: '237% de lo que realmente se cobró',
+                valueClass: 'red'
+            },
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-franc">
+        <button class="tab-btn" data-tab="f-total">Gran total</button>
+        <button class="tab-btn" data-tab="f-vector">Por vector</button>
+        <button class="tab-btn" data-tab="f-centro">Por centro</button>
+        <button class="tab-btn" data-tab="f-pico">Sin recuperar pico</button>
+    </div>
+
+    <div class="tab-content" id="f-total">
+        <div class="chart-card">
+            <div class="chart-title">Royalties cobrados vs potencial si hubieran crecido al ritmo de la red (€/año)
+            </div>
+            <div style="height:280px">
+                <canvas id="royChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Royalties reales cobrados</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#EF9F27;opacity:.7"></span>Potencial al CAGR de la red</span>
+            </div>
+        </div>
+        <div class="insight red">
+            <div class="insight-title">🔍 Por qué €23,5M es una cifra real, no teórica</div>
+            <div class="insight-body">El CAGR de la red de franquicias 2015–2025 es del 50,3% anual. Hay centros
+                abiertos desde 2015-2016 que hoy facturan menos de €700K siendo de los más antiguos de la red. El número
+                es el gap entre los que sí crecieron y los que se estancaron.
+            </div>
+        </div>
+        <div class="insight amber">
+            <div class="insight-title">⚠️ Granollers, Mataró y Sabadell concentran el 33% del gap</div>
+            <div class="insight-body">Solo estos tres centros representan €8,07M de los €23,3M de estancamiento. Los
+                tres abrieron entre 2015-2016 y llevan más de 9 años en la red sin alcanzar el ritmo de Glòries o Les
+                Corts.
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ El problema no es la red, es la distribución</div>
+            <div class="insight-body">Los royalties han crecido de €29K en 2015 a €1,70M en 2025 — un crecimiento de 58x
+                en 10 años. Cada punto porcentual de crecimiento adicional en los centros Tier B vale ~€100K de
+                royalties anuales.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="f-vector">
+        <div class="col-2 mb-16">
+            <div class="surface-card" style="background:var(--red-pale);border-color:var(--red)">
+                <div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:4px">VECTOR 1 — Caídas
+                    directas
+                </div>
+                <div style="font-size:24px;font-weight:700;color:var(--red)">€204K</div>
+                <div class="kpi-sub">Royalties perdidos en años donde la facturación bajó. Directamente cuantificable.
+                </div>
+            </div>
+            <div class="surface-card" style="background:var(--amber-pale);border-color:var(--amber)">
+                <div style="font-size:11px;color:var(--amber);font-weight:700;margin-bottom:4px">VECTOR 2 —
+                    Estancamiento
+                </div>
+                <div style="font-size:24px;font-weight:700;color:var(--amber)">€23,3M</div>
+                <div class="kpi-sub">Centros maduros que no crecieron al ritmo de la red. El mayor vector.</div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Top 10 — mayor estancamiento vs potencial red (€ royalties no captados)</div>
+            <div style="height:280px">
+                <canvas id="stagChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card mt-16">
+            <div class="chart-title">Top 10 — royalties perdidos en años de caída (€)</div>
+            <div style="height:240px">
+                <canvas id="decChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="f-centro">
+        <div class="chart-card">
+            <div class="chart-title">Royalties acumulados por centro 2015–2025 — top 10 (€)</div>
+            <div style="height:320px">
+                <canvas id="topRoyChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:rgba(181,212,244,.6)"></span>Facturación total</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Royalties cobrados</span>
+            </div>
+        </div>
+        <div style="overflow-x:auto;margin-top:16px">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Centro</th>
+                    <th>Abrió</th>
+                    <th>Facturación total</th>
+                    <th>Royalties cobrados</th>
+                    <th>Roy./año medio</th>
+                </tr>
+                </thead>
+                <tbody id="topRoyTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-content" id="f-pico">
+        <div class="kpi-grid" style="grid-template-columns:repeat(2,1fr)">
+            <div class="kpi-card">
+                <div class="kpi-label">Centros bajo su pico histórico</div>
+                <div class="kpi-value red">6 centros</div>
+                <div class="kpi-sub">Nunca volvieron a su máximo</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Más tiempo sin recuperar</div>
+                <div class="kpi-value amber">Horta · 4 años</div>
+                <div class="kpi-sub">Pico en 2021, nunca volvió a ese nivel</div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Pico histórico vs facturación 2025 (€)</div>
+            <div style="height:260px">
+                <canvas id="neverChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:rgba(181,212,244,.7)"></span>Pico histórico</span>
+                <span class="chart-legend-item"><span class="legend-dot"
+                                                      style="background:#E24B4A"></span>2025 real</span>
+            </div>
+        </div>
+        <div id="neverBars" style="margin-top:14px"></div>
+        <div class="insight amber" style="margin-top:14px">
+            <div class="insight-title">⚠️ Más allá del royalty: señal de fragilidad contractual</div>
+            <div class="insight-body">Un centro bajo su pico indica que el franquiciado no está gestionando bien o
+                pierde terreno frente a competencia. Mayor incentivo para no renovar o reducir inversión en marca. Horta
+                lleva 4 años bajo su pico sin intervención documentada.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const royByYear = [
+            {y: '2015', r: 28931, p: 28931}, {y: '2016', r: 181597, p: 220000},
+            {y: '2017', r: 363200, p: 480000}, {y: '2018', r: 673517, p: 950000},
+            {y: '2019', r: 940005, p: 1450000}, {y: '2020', r: 910444, p: 1680000},
+            {y: '2021', r: 1156321, p: 2100000}, {y: '2022', r: 1189821, p: 2350000},
+            {y: '2023', r: 1303693, p: 2600000}, {y: '2024', r: 1479375, p: 2900000},
+            {y: '2025', r: 1702363, p: 3150000},
+        ];
+        new Chart(document.getElementById('royChart'), {
+            type: 'line',
+            data: {
+                labels: royByYear.map(d => d.y), datasets: [
+                    {
+                        label: 'Potencial',
+                        data: royByYear.map(d => d.p),
+                        borderColor: '#EF9F27',
+                        backgroundColor: 'rgba(239,159,39,.12)',
+                        borderWidth: 1.5,
+                        borderDash: [5, 4],
+                        pointRadius: 3,
+                        fill: true,
+                        tension: .3
+                    },
+                    {
+                        label: 'Real',
+                        data: royByYear.map(d => d.r),
+                        borderColor: '#185FA5',
+                        backgroundColor: 'rgba(24,95,165,.15)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#185FA5',
+                        pointRadius: 4,
+                        fill: true,
+                        tension: .3
+                    }
+                ]
+            },
+            options: opts(fmt.M)
+        });
+
+        const stagData = [{name: 'Granollers', v: 3424443}, {name: 'Mataró', v: 2555197}, {
+            name: 'Glòries',
+            v: 2159533
+        }, {name: 'Sabadell', v: 2091473}, {name: 'S.Coloma', v: 2012248}, {
+            name: 'Sagrera',
+            v: 1465721
+        }, {name: 'Horta', v: 1385845}, {name: 'Tarragona', v: 1272824}, {
+            name: 'Cerdanyola',
+            v: 1165019
+        }, {name: 'Terrassa', v: 1013128}];
+        new Chart(document.getElementById('stagChart'), {
+            type: 'bar',
+            data: {
+                labels: stagData.map(d => d.name), datasets: [
+                    {
+                        label: 'Gap',
+                        data: stagData.map(d => d.v),
+                        backgroundColor: 'rgba(186,117,23,.8)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: optsHoriz(fmt.M)
+        });
+
+        const decData = [{n: 'Sagrera', v: 23005}, {n: 'Girona', v: 21450}, {n: 'Granollers', v: 18546}, {
+            n: 'Glòries',
+            v: 17020
+        }, {n: 'Mataró', v: 15903}, {n: 'Rubí', v: 13257}, {n: 'Tarragona', v: 12610}, {
+            n: 'Cornellà',
+            v: 12076
+        }, {n: 'Cerdanyola', v: 11819}, {n: 'Sant Cugat', v: 9139}];
+        new Chart(document.getElementById('decChart'), {
+            type: 'bar',
+            data: {
+                labels: decData.map(d => d.n), datasets: [
+                    {
+                        label: 'Caída',
+                        data: decData.map(d => d.v),
+                        backgroundColor: 'rgba(162,45,45,.8)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: optsHoriz(fmt.euro)
+        });
+
+        const topRoy = [{n: 'Glòries', b: 9748603, r: 779888, o: 2017}, {
+            n: 'Granollers',
+            b: 9018100,
+            r: 721448,
+            o: 2015
+        }, {n: 'Girona', b: 7218043, r: 577443, o: 2016}, {
+            n: 'Les Corts',
+            b: 6748728,
+            r: 539898,
+            o: 2018
+        }, {n: 'Sabadell', b: 6472990, r: 517839, o: 2016}, {
+            n: 'Sant Cugat',
+            b: 6162981,
+            r: 493038,
+            o: 2015
+        }, {n: 'Mataró', b: 5957651, r: 476612, o: 2016}, {
+            n: 'Tarragona',
+            b: 5865319,
+            r: 469225,
+            o: 2016
+        }, {n: 'Terrassa', b: 5849699, r: 467976, o: 2016}, {n: 'Horta', b: 5256360, r: 420509, o: 2018}];
+        new Chart(document.getElementById('topRoyChart'), {
+            type: 'bar',
+            data: {
+                labels: topRoy.map(d => d.n), datasets: [
+                    {
+                        label: 'Facturación',
+                        data: topRoy.map(d => d.b),
+                        backgroundColor: 'rgba(181,212,244,.6)',
+                        borderRadius: 3
+                    },
+                    {
+                        label: 'Royalties',
+                        data: topRoy.map(d => d.r),
+                        backgroundColor: 'rgba(24,95,165,.85)',
+                        borderRadius: 3
+                    }
+                ]
+            },
+            options: optsHoriz(fmt.K)
+        });
+
+        const tbody = document.getElementById('topRoyTable');
+        topRoy.forEach(d => {
+            const yr = 2026 - d.o;
+            tbody.innerHTML += `<tr><td class="strong">${d.n}</td><td>${d.o}</td><td>${fmt.K(d.b)}</td><td style="color:var(--blue-mid);font-weight:600">${fmt.K(d.r)}</td><td>${fmt.K(Math.round(d.r / yr))}</td></tr>`;
+        });
+
+        const neverData = [{n: 'Sant Cugat', pk: 846083, curr: 754942, miss: 7291}, {
+            n: 'Mataró',
+            pk: 710779,
+            curr: 636633,
+            miss: 5932
+        }, {n: 'Horta', pk: 758101, curr: 696595, miss: 4920}, {
+            n: 'Tarragona',
+            pk: 760089,
+            curr: 720128,
+            miss: 3197
+        }, {n: 'Zaragoza', pk: 587735, curr: 550672, miss: 2965}, {
+            n: 'Granollers',
+            pk: 1201350,
+            curr: 1143782,
+            miss: 4605
+        }];
+        new Chart(document.getElementById('neverChart'), {
+            type: 'bar',
+            data: {
+                labels: neverData.map(d => d.n), datasets: [
+                    {
+                        label: 'Pico',
+                        data: neverData.map(d => d.pk),
+                        backgroundColor: 'rgba(181,212,244,.7)',
+                        borderRadius: 4
+                    },
+                    {
+                        label: '2025',
+                        data: neverData.map(d => d.curr),
+                        backgroundColor: 'rgba(226,75,74,.8)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        const barsEl = document.getElementById('neverBars');
+        neverData.forEach(d => {
+            const drop = ((d.curr - d.pk) / d.pk * 100).toFixed(1);
+            const pct = Math.round(d.curr / d.pk * 100);
+            barsEl.innerHTML += `<div style="display:grid;grid-template-columns:100px 1fr 70px 90px;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border);align-items:center;font-size:12px">
+        <span style="font-weight:600">${d.n}</span>
+        <div style="background:var(--border);border-radius:4px;height:6px"><div style="background:var(--red);width:${pct}%;height:100%;border-radius:4px"></div></div>
+        <span style="color:var(--red);text-align:right">${drop}%</span>
+        <span style="color:var(--text-3);text-align:right">${fmt.K(d.miss)}/año</span>
+      </div>`;
+        });
+    </script>
+</div>
+</body>
+</html>

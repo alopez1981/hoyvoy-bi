@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Cálculo de break-even · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 4 de 9',
+        title: 'Cálculo de break-even',
+        subtitle: 'Facturación mínima necesaria para que un centro propio no pierda dinero, según configuración de plantilla.',
+        meta: [' Datos 2015–2025', ' Fuente: Google Sheets resultado histórico'],
+        kpis: [
+            {label: 'Break-even mínimo absoluto', value: '€218K/año', sub: '1D, 1AA, 2 profes, local pequeño'},
+            {
+                label: 'Formato Pamplona (3 profes)',
+                value: '€289K/año',
+                sub: 'El más eficiente de la red',
+                valueClass: 'amber'
+            },
+            {label: 'Para ganar bien (+20%)', value: '€361K/año', sub: 'Con formato Pamplona'},
+            {
+                label: 'Facturación media año 2',
+                value: '€297K/año',
+                sub: 'Ya cubre el formato compacto',
+                valueClass: 'green'
+            },
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-be">
+        <button class="tab-btn" data-tab="be-table">Tabla break-even</button>
+        <button class="tab-btn" data-tab="be-chart">Gráfico</button>
+        <button class="tab-btn" data-tab="be-regla">Regla de oro</button>
+    </div>
+
+    <div class="tab-content" id="be-table">
+        <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Configuración</th>
+                    <th>Coste/mes</th>
+                    <th>Break-even (0%)</th>
+                    <th>Para ganar +20%</th>
+                    <th>Para ganar +30%</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="strong">Mínimo (1D, 1AA, 2P, local peq.)</td>
+                    <td>€18.140</td>
+                    <td class="text-red font-bold">€217.680</td>
+                    <td>€272.100</td>
+                    <td>€310.971</td>
+                </tr>
+                <tr style="background:#EAF3DE">
+                    <td class="strong">Compacto — modelo Pamplona (1D, 2AA, 3P)</td>
+                    <td>€24.055</td>
+                    <td class="text-amber font-bold">€288.660</td>
+                    <td>€360.825</td>
+                    <td>€412.371</td>
+                </tr>
+                <tr>
+                    <td class="strong">Estándar (1D, 2AA, 4P, local peq.)</td>
+                    <td>€28.730</td>
+                    <td class="text-amber font-bold">€344.760</td>
+                    <td>€430.950</td>
+                    <td>€492.514</td>
+                </tr>
+                <tr>
+                    <td class="strong">Estándar+ (1D, 2AA, 5P, local peq.)</td>
+                    <td>€32.305</td>
+                    <td>€387.660</td>
+                    <td>€484.575</td>
+                    <td>€554.657</td>
+                </tr>
+                <tr>
+                    <td class="strong">Medio (1D, 2AA, 4P, local grande)</td>
+                    <td>€29.930</td>
+                    <td>€359.160</td>
+                    <td>€448.950</td>
+                    <td>€513.086</td>
+                </tr>
+                <tr>
+                    <td class="strong">Grande (1D, 2AA, 6P, local grande)</td>
+                    <td>€38.180</td>
+                    <td>€458.160</td>
+                    <td>€572.700</td>
+                    <td>€654.514</td>
+                </tr>
+                <tr>
+                    <td class="strong">Grande+ (1D, 3AA, 8P, local grande)</td>
+                    <td>€48.770</td>
+                    <td>€585.240</td>
+                    <td>€731.550</td>
+                    <td>€836.057</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="insight green mt-16">
+            <div class="insight-title">✅ Formato recomendado para nuevas aperturas: Compacto Pamplona</div>
+            <div class="insight-body">1 director, 2 AA, 3 profes, local pequeño. Coste €24K/mes. Break-even en año 2
+                (~€297K según curva de maduración real de la red). Si el mercado responde, se añaden profes. Si no, las
+                pérdidas son controlables.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="be-chart">
+        <div class="chart-card">
+            <div class="chart-title">Break-even y umbrales de rentabilidad por configuración de plantilla (€/año)</div>
+            <div style="height:300px">
+                <canvas id="beChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:rgba(226,75,74,.6)"></span>Break-even (0%)</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:rgba(239,159,39,.6)"></span>Para ganar +20%</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:rgba(59,109,17,.6)"></span>Para ganar +30%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="be-regla">
+        <div class="chart-card">
+            <div class="chart-title">Año en que cada configuración entra en break-even según curva de maduración real
+            </div>
+            <div style="height:240px">
+                <canvas id="matBeChart"></canvas>
+            </div>
+        </div>
+        <div class="insight red">
+            <div class="insight-title">🔴 Año 1 — Pérdidas garantizadas (facturación media red: €145K)</div>
+            <div class="insight-body">Ningún formato es rentable el primer año. Con formato compacto, las pérdidas son
+                ~€144K. Con mínimo ~€73K. Es el coste de apertura a asumir como inversión.
+            </div>
+        </div>
+        <div class="insight amber mt-8">
+            <div class="insight-title">🟡 Año 2 — Break-even si el formato es compacto (facturación media: €297K)</div>
+            <div class="insight-body">Con formato Pamplona (€289K/año de coste), el año 2 cubre exactamente los costes.
+                Con formato mínimo, el año 2 ya genera ~€79K de beneficio.
+            </div>
+        </div>
+        <div class="insight green mt-8">
+            <div class="insight-title">✅ Año 3 — Rentabilidad real en todos los formatos (facturación media: €411K)
+            </div>
+            <div class="insight-body">Con €411K de facturación media en año 3, cualquier formato de hasta 4 profesores
+                genera margen positivo. El formato Pamplona genera €122K con margen del 30%.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const beLabels = ['Mínimo\n(2P)', 'Compacto\nPamplona (3P)', 'Estándar\n(4P)', 'Estándar+\n(5P)', 'Medio\n(4P grd)', 'Grande\n(6P grd)', 'Grande+\n(8P grd)'];
+        new Chart(document.getElementById('beChart'), {
+            type: 'bar',
+            data: {
+                labels: beLabels, datasets: [
+                    {
+                        label: 'Break-even 0%',
+                        data: [217680, 288660, 344760, 387660, 359160, 458160, 585240],
+                        backgroundColor: 'rgba(226,75,74,.65)',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Para +20%',
+                        data: [272100, 360825, 430950, 484575, 448950, 572700, 731550],
+                        backgroundColor: 'rgba(239,159,39,.65)',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Para +30%',
+                        data: [310971, 412371, 492514, 554657, 513086, 654514, 836057],
+                        backgroundColor: 'rgba(59,109,17,.65)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        const matMean = [144938, 297048, 411060, 470897, 527346];
+        new Chart(document.getElementById('matBeChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Año 1', 'Año 2', 'Año 3', 'Año 4', 'Año 5'], datasets: [
+                    {
+                        label: 'Facturación media',
+                        data: matMean,
+                        backgroundColor: matMean.map((_, i) => i === 2 ? 'rgba(24,95,165,.85)' : 'rgba(133,183,235,.7)'),
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+    </script>
+</div>
+</body>
+</html>

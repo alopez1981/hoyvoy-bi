@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Dinero no ganado: propios · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 9 de 9',
+        title: 'Dinero dejado de ganar — centros propios 2015–2025',
+        subtitle: 'Beneficio no generado en caídas directas, capacidad infrautilizada y picos históricos no recuperados. Comparativa de eficiencia vs franquicias.',
+        meta: [' 2015–2025', ' 10 centros propios'],
+        kpis: [
+            {
+                label: 'Beneficio real generado',
+                value: '€12,4M',
+                sub: 'Acumulado 2015–2025 como propios',
+                mod: 'highlight',
+                valueClass: 'green'
+            },
+            {
+                label: 'Pérdida en caídas (V1)',
+                value: '€605K',
+                sub: 'Beneficio no generado en años de bajada',
+                valueClass: 'red'
+            },
+            {
+                label: 'Pico no recuperado (V3)',
+                value: '€2,75M',
+                sub: 'Barcelona: 10 años bajo su pico de 2015',
+                valueClass: 'red'
+            },
+            {
+                label: 'Gap vs potencial',
+                value: '27,7%',
+                sub: 'Propios vs 237% de franquicias — 8,6x mejor',
+                valueClass: 'amber'
+            },
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-propios">
+        <button class="tab-btn" data-tab="p-total">Gran total</button>
+        <button class="tab-btn" data-tab="p-bcn">Barcelona</button>
+        <button class="tab-btn" data-tab="p-hosp">L'Hospitalet</button>
+        <button class="tab-btn" data-tab="p-resto">Resto</button>
+        <button class="tab-btn" data-tab="p-ctx">Contexto</button>
+    </div>
+
+    <div class="tab-content" id="p-total">
+        <div class="col-3 mb-16">
+            <div class="surface-card" style="background:var(--red-pale);border-color:var(--red);text-align:center">
+                <div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:4px">TOTAL DEJADO DE GANAR
+                </div>
+                <div style="font-size:28px;font-weight:800;color:var(--red)">€3,43M</div>
+                <div class="kpi-sub">V1 + V2 + V3 combinados</div>
+            </div>
+            <div class="surface-card" style="background:var(--green-pale);border-color:var(--green);text-align:center">
+                <div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:4px">BENEFICIO REAL GANADO
+                </div>
+                <div style="font-size:28px;font-weight:800;color:var(--green)">€12,4M</div>
+                <div class="kpi-sub">2015–2025 como propios</div>
+            </div>
+            <div class="surface-card" style="background:#E6F1FB;border-color:var(--blue-mid);text-align:center">
+                <div style="font-size:11px;color:var(--blue-mid);font-weight:700;margin-bottom:4px">% DEJADO DE GANAR
+                </div>
+                <div style="font-size:28px;font-weight:800;color:var(--blue-mid)">27,7%</div>
+                <div class="kpi-sub">Vs 237% de las franquicias</div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Beneficio real vs dinero perdido por centro propio — acumulado (€)</div>
+            <div style="height:280px">
+                <canvas id="profitChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#3B6D11"></span>Beneficio real acumulado</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Dejado de ganar</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Centro con pérdidas acumuladas</span>
+            </div>
+        </div>
+        <div class="insight red">
+            <div class="insight-title">📌 El 80% del dinero perdido es Barcelona</div>
+            <div class="insight-body">De los €3,43M perdidos, €3,1M corresponden a Barcelona. Pero hay que separar:
+                €147K fue COVID (inevitable), €202K fue declive estructural pre-COVID 2015-2019, y €70K es la
+                no-recuperación post-COVID.
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ Los propios capturan el 78% de su potencial</div>
+            <div class="insight-body">A diferencia de las franquicias (gap 237%), en propios el gap es del 27,7%. El
+                modelo propio funciona bien. Los problemas son puntuales y corregibles.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="p-bcn">
+        <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+            <div class="kpi-card">
+                <div class="kpi-label">Pico histórico</div>
+                <div class="kpi-value green">€2,04M</div>
+                <div class="kpi-sub">2015. Nunca vuelto a alcanzar.</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Facturación 2025</div>
+                <div class="kpi-value amber">€1,26M</div>
+                <div class="kpi-sub">−38% respecto al pico</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Pérdida estructural (sin COVID)</div>
+                <div class="kpi-value red">€232K</div>
+                <div class="kpi-sub">Caídas 2016-2024</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Gap 10 años vs pico</div>
+                <div class="kpi-value red">€2,72M</div>
+                <div class="kpi-sub">35% margen × diferencia acumulada</div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Barcelona — facturación real vs pico 2015 (€). Zona amarilla = beneficio no
+                capturado.
+            </div>
+            <div style="height:280px">
+                <canvas id="bcnChart"></canvas>
+            </div>
+        </div>
+        <div class="col-3 mt-12">
+            <div class="surface-card" style="background:var(--red-pale)">
+                <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px">Declive 2015–2019
+                    (estructural)
+                </div>
+                <div style="font-size:20px;font-weight:700;color:var(--red)">€202K</div>
+                <div class="kpi-sub">De €2,04M a €1,46M sin COVID. ¿Canibalización de Glòries/Sagrera?</div>
+            </div>
+            <div class="surface-card">
+                <div style="font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:4px">COVID 2020 (exógeno)
+                </div>
+                <div style="font-size:20px;font-weight:700;color:var(--text-3)">€147K</div>
+                <div class="kpi-sub">Inevitable. No atribuible a gestión.</div>
+            </div>
+            <div class="surface-card" style="background:var(--amber-pale)">
+                <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:4px">No recuperación
+                    2021–2025
+                </div>
+                <div style="font-size:20px;font-weight:700;color:var(--amber)">€70K</div>
+                <div class="kpi-sub">Sigue €200K bajo el nivel pre-COVID.</div>
+            </div>
+        </div>
+        <div class="insight amber mt-16">
+            <div class="insight-title">🚨 Alarma activa 2025: −23% matrículas + −12% ticket</div>
+            <div class="insight-body">Es la señal más urgente de toda la red. Si continúa en 2026, el beneficio puede
+                caer de €710K proyectado a ~€500K. Es el centro con más que perder.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="p-hosp">
+        <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+            <div class="kpi-card">
+                <div class="kpi-label">Pico histórico (franquicia)</div>
+                <div class="kpi-value green">€839K</div>
+                <div class="kpi-sub">2018, con 8-9 profesores</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Facturación 2025 (propio)</div>
+                <div class="kpi-value red">€612K</div>
+                <div class="kpi-sub">−27% vs pico. Solo 4 profes.</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Pérdida anual por plantilla</div>
+                <div class="kpi-value red">€80K/año</div>
+                <div class="kpi-sub">Beneficio no generado vs pico</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Upside con 9 profes</div>
+                <div class="kpi-value green">+€129K/año</div>
+                <div class="kpi-sub">Beneficio adicional inmediato</div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">L'Hospitalet — trayectoria 2015–2025: franquicia (azul) y propio (rojo) (€)</div>
+            <div style="height:280px">
+                <canvas id="hospChart"></canvas>
+            </div>
+        </div>
+        <div class="insight red">
+            <div class="insight-title">🚨 El holding compró un centro que llevaba 6 años en declive</div>
+            <div class="insight-body">L'Hospitalet pasó a propio en 2024, pero llevaba cayendo desde su pico de 2018. En
+                2023 ya facturaba €646K. La causa: de 8-9 profesores a 4. Sin contratar instructores, seguirá cayendo.
+            </div>
+        </div>
+        <div class="insight green mt-8">
+            <div class="insight-title">💡 Mayor ROI inmediato de toda la red</div>
+            <div class="insight-body">Contratar 5 profesores: €150K/año de coste → €765K de facturación adicional →
+                €268K de beneficio adicional. ROI de 1,8x en año 1. Ninguna otra decisión tiene este perfil de retorno.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="p-resto">
+        <div class="chart-card">
+            <div class="chart-title">Pérdida estructural por centro (sin COVID 2020) — beneficio no capturado (€)</div>
+            <div style="height:260px">
+                <canvas id="structChart"></canvas>
+            </div>
+        </div>
+        <div class="insight amber">
+            <div class="insight-title">📍 Reus: el coste de una transición sin protocolo</div>
+            <div class="insight-body">Reus pasó de franquicia a propio en 2022 y cayó −28% ese año. Pérdida de
+                beneficio: €60K. Patrón idéntico al de L'Hospitalet: los profesores se van sin protocolo de retención.
+            </div>
+        </div>
+        <div class="insight amber mt-8">
+            <div class="insight-title">📍 Valladolid: doble caída 2022-2023 sin intervención</div>
+            <div class="insight-body">Dos años consecutivos de declive sin acción documentada. €25K de beneficio perdido
+                que cualquier alerta básica de BI habría detectado.
+            </div>
+        </div>
+        <div class="insight green mt-8">
+            <div class="insight-title">✅ Santander y Pamplona: el modelo que funciona</div>
+            <div class="insight-body">Ambos crecen sin caídas relevantes. Pamplona creció +28% en su primer año como
+                propio. La diferencia: los instructores se quedaron. Son el benchmark de transición exitosa.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="p-ctx">
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Propios: gap vs potencial</div>
+                <div class="kpi-value">27,7%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Franquicias: gap vs potencial</div>
+                <div class="kpi-value red">237%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Eficiencia propios vs franquicias</div>
+                <div class="kpi-value green">8,6x mejor</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Acción de mayor retorno</div>
+                <div class="kpi-value" style="font-size:14px">L'Hosp. + profes</div>
+                <div class="kpi-sub">ROI 1,8x año 1. €129K beneficio adicional.</div>
+            </div>
+        </div>
+        <div class="insight blue">
+            <div class="insight-title">📊 Propios vs franquicias: eficiencias muy distintas</div>
+            <div class="insight-body">Los centros propios han capturado el 78% de su potencial. Las franquicias solo el
+                30%. El modelo propio, aunque más costoso en capital y gestión, es significativamente más eficiente en
+                capturar valor. Los problemas son eventos puntuales, no sistémicos.
+            </div>
+        </div>
+        <div class="insight amber mt-8">
+            <div class="insight-title">🔍 Sin Barcelona, el gap es solo el 5,7%</div>
+            <div class="insight-body">Si excluimos el gap Barcelona-vs-pico-2015 (€2,72M), el dinero perdido en el resto
+                de centros propios es solo €701K histórico — un 5,7% del beneficio generado. Y €147K de eso fue COVID.
+            </div>
+        </div>
+        <div class="insight green mt-8">
+            <div class="insight-title">💡 Las tres decisiones que habrían cambiado el número</div>
+            <div class="insight-body">1. Investigar la caída de Barcelona en 2017 (−27%) cuando ocurrió. 2. Protocolo de
+                retención de instructores en Reus y L'Hospitalet. 3. Alerta automática si un propio cae >10% dos
+                trimestres consecutivos. Estas tres acciones habrían reducido el gap en al menos €800K.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const profitData = [{n: 'Barcelona', p: 7940000, l: 3102672}, {
+            n: 'Pamplona',
+            p: 740000,
+            l: 45200
+        }, {n: 'Santander', p: 330000, l: 20373}, {n: 'Reus', p: 420000, l: 60473}, {
+            n: 'Murcia',
+            p: 230000,
+            l: 13563
+        }, {n: "L'Hosp.", p: 570000, l: 72230}, {n: 'Valladolid', p: -540000, l: 44444}, {
+            n: 'Badalona',
+            p: -270000,
+            l: 52925
+        }, {n: 'Alcorcón', p: -60000, l: 8252}, {n: 'Pozuelo', p: -190000, l: 0}];
+        new Chart(document.getElementById('profitChart'), {
+            type: 'bar',
+            data: {
+                labels: profitData.map(d => d.n), datasets: [
+                    {
+                        label: 'Beneficio real',
+                        data: profitData.map(d => d.p),
+                        backgroundColor: profitData.map(d => d.p >= 0 ? 'rgba(59,109,17,.8)' : 'rgba(226,75,74,.7)'),
+                        borderRadius: 3
+                    },
+                    {
+                        label: 'Perdido',
+                        data: profitData.map(d => d.l),
+                        backgroundColor: 'rgba(186,117,23,.8)',
+                        borderRadius: 3
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        const bcnData = [{y: '2015', b: 2042382, ref: 2042382}, {y: '2016', b: 2009268, ref: 2042382}, {
+            y: '2017',
+            b: 1472066,
+            ref: 2042382
+        }, {y: '2018', b: 1465268, ref: 2042382}, {y: '2019', b: 1464807, ref: 2042382}, {
+            y: '2020',
+            b: 1045299,
+            ref: 2042382
+        }, {y: '2021', b: 1233960, ref: 2042382}, {y: '2022', b: 1214738, ref: 2042382}, {
+            y: '2023',
+            b: 1301775,
+            ref: 2042382
+        }, {y: '2024', b: 1234737, ref: 2042382}, {y: '2025', b: 1264238, ref: 2042382}];
+        new Chart(document.getElementById('bcnChart'), {
+            type: 'bar',
+            data: {
+                labels: bcnData.map(d => d.y), datasets: [
+                    {
+                        label: 'Pico 2015',
+                        data: bcnData.map(d => d.ref),
+                        backgroundColor: 'rgba(239,159,39,.15)',
+                        borderRadius: 4,
+                        type: 'bar'
+                    },
+                    {
+                        label: 'Real',
+                        data: bcnData.map(d => d.b),
+                        backgroundColor: bcnData.map(d => d.y === '2020' ? 'rgba(133,183,235,.5)' : 'rgba(24,95,165,.85)'),
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        const hospData = [{y: '2015', b: 92668, t: 'F'}, {y: '2016', b: 686336, t: 'F'}, {
+            y: '2017',
+            b: 808552,
+            t: 'F'
+        }, {y: '2018', b: 839375, t: 'F'}, {y: '2019', b: 770147, t: 'F'}, {y: '2020', b: 739118, t: 'F'}, {
+            y: '2021',
+            b: 667242,
+            t: 'F'
+        }, {y: '2022', b: 697098, t: 'F'}, {y: '2023', b: 645785, t: 'F'}, {y: '2024', b: 676769, t: 'P'}, {
+            y: '2025',
+            b: 611841,
+            t: 'P'
+        }];
+        new Chart(document.getElementById('hospChart'), {
+            type: 'bar',
+            data: {
+                labels: hospData.map(d => d.y), datasets: [
+                    {
+                        label: 'Facturación',
+                        data: hospData.map(d => d.b),
+                        backgroundColor: hospData.map(d => d.t === 'P' ? 'rgba(226,75,74,.85)' : 'rgba(24,95,165,.75)'),
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        const structData = [{n: 'Barcelona', v: 232342}, {n: 'Reus', v: 60473}, {
+            n: 'Valladolid',
+            v: 25242
+        }, {n: "L'Hosp.", v: 22725}, {n: 'Santander', v: 20373}, {n: 'Murcia', v: 13563}, {
+            n: 'Badalona',
+            v: 12808
+        }, {n: 'Alcorcón', v: 8252}];
+        new Chart(document.getElementById('structChart'), {
+            type: 'bar',
+            data: {
+                labels: structData.map(d => d.n), datasets: [
+                    {
+                        label: 'Pérdida',
+                        data: structData.map(d => d.v),
+                        backgroundColor: structData.map(d => d.v > 100000 ? 'rgba(162,45,45,.8)' : d.v > 30000 ? 'rgba(186,117,23,.8)' : 'rgba(133,183,235,.8)'),
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: optsHoriz(fmt.euro)
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Proyección 2026 · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 7 de 9',
+        title: 'Proyección 2026',
+        subtitle: 'Previsión de facturación, beneficio por centro y composición de ingresos del holding para 2026.',
+        meta: [' Datos 2015–2025', ' Fuente: Google Sheets resultado histórico'],
+        kpis: [
+            {label: 'Beneficio holding 2026', value: '€4,15M', sub: '+12,1% vs €3,72M en 2025', valueClass: 'green'},
+            {label: 'Propios 2026', value: '€2,36M', sub: '+18,5% · 57% del holding'},
+            {label: 'Royalties 2026', value: '€1,78M', sub: '+4,7% · 43% del holding'},
+            {
+                label: 'Primera vez todos en positivo',
+                value: '10/10 propios',
+                sub: 'Pozuelo y Alcorcón salen del rojo',
+                valueClass: 'green'
+            },
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-proj">
+        <button class="tab-btn" data-tab="p7-global">Holding global</button>
+        <button class="tab-btn" data-tab="p7-propios">Propios 2026</button>
+        <button class="tab-btn" data-tab="p7-franc">Franquicias 2026</button>
+    </div>
+
+    <div class="tab-content" id="p7-global">
+        <div class="chart-card">
+            <div class="chart-title">Evolución beneficio holding 2020–2026p — propios vs royalties (€)</div>
+            <div style="height:260px">
+                <canvas id="proj26Chart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Centros propios</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#9FE1CB"></span>Royalties franquicias</span>
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ Los propios crecen 4x más rápido que los royalties en 2026</div>
+            <div class="insight-body">Propios suman +€369K de beneficio adicional. Royalties solo +€79K. Cada €1 de
+                nueva facturación en un propio genera €0,37 de beneficio vs €0,08 de una franquicia.
+            </div>
+        </div>
+        <div class="insight blue mt-8">
+            <div class="insight-title">📊 2026: primera vez que todos los propios están en positivo</div>
+            <div class="insight-body">Pozuelo proyecta €379K (rentable). Alcorcón proyecta €257K (+28%). Por primera vez
+                los 10 centros propios generan beneficio positivo simultáneamente.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="p7-propios">
+        <div class="chart-card">
+            <div class="chart-title">Beneficio por centro propio — 2025 vs proyección 2026 (€)</div>
+            <div style="height:300px">
+                <canvas id="prop26Chart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#B5D4F4"></span>2025</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>2026p</span>
+            </div>
+        </div>
+        <div class="insight red">
+            <div class="insight-title">⚠️ L'Hospitalet: la única proyección que empeora</div>
+            <div class="insight-body">La proyección 2026 marca €487K de facturación (vs €612K en 2025) — caída del −20%.
+                El beneficio baja de €253K a €118K. Causa: no se han repuesto los profesores. Cada mes sin contratar es
+                dinero que no vuelve.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="p7-franc">
+        <div class="chart-card">
+            <div class="chart-title">Royalties por tier — 2025 vs 2026p (€)</div>
+            <div style="height:240px">
+                <canvas id="franc26Chart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#B5D4F4"></span>2025</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>2026p</span>
+            </div>
+        </div>
+        <div class="insight amber">
+            <div class="insight-title">⚠️ El crecimiento orgánico genera poco para el holding</div>
+            <div class="insight-body">Toda la red de franquicias crece €992K en facturación en 2026. El holding solo
+                captura €79K (el 8%). Para que los royalties crezcan €500K más, necesitas €6,25M adicionales de
+                facturación — es decir, ~15 franquicias nuevas maduras.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const yrs7 = ['2020', '2021', '2022', '2023', '2024', '2025', '2026p'];
+        const ownB = [3855862, 4719546, 4471196, 4879848, 5271554, 5785799, 6267280];
+        const royB = [910444, 1169467, 1221190, 1353087, 1541962, 1702363, 1781733];
+
+        new Chart(document.getElementById('proj26Chart'), {
+            type: 'bar',
+            data: {
+                labels: yrs7, datasets: [
+                    {
+                        label: 'Propios',
+                        data: ownB,
+                        backgroundColor: yrs7.map((_, i) => i === 6 ? 'rgba(24,95,165,.5)' : 'rgba(24,95,165,.85)'),
+                        borderRadius: 4,
+                        stack: 's'
+                    },
+                    {
+                        label: 'Royalties',
+                        data: royB,
+                        backgroundColor: yrs7.map((_, i) => i === 6 ? 'rgba(159,225,203,.5)' : 'rgba(159,225,203,.9)'),
+                        borderRadius: 4,
+                        stack: 's'
+                    }
+                ]
+            },
+            options: opts(fmt.M, {stacked: true})
+        });
+
+        const pNames = ['Barcelona', "L'Hosp.", 'Pamplona', 'Santander', 'Badalona', 'Valladolid', 'Reus', 'Murcia', 'Pozuelo', 'Alcorcón'];
+        const p25 = [554018, 252681, 329338, 306497, 176739, 175878, 143911, 137691, -48819, -5156];
+        const p26 = [709760, 117522, 223155, 428597, 271956, 180501, 163802, 141329, 110928, 16816];
+
+        new Chart(document.getElementById('prop26Chart'), {
+            type: 'bar',
+            data: {
+                labels: pNames, datasets: [
+                    {label: '2025', data: p25, backgroundColor: 'rgba(181,212,244,.8)', borderRadius: 3},
+                    {
+                        label: '2026p',
+                        data: p26,
+                        backgroundColor: p26.map(v => v >= 0 ? 'rgba(24,95,165,.85)' : 'rgba(226,75,74,.8)'),
+                        borderRadius: 3
+                    }
+                ]
+            },
+            options: optsHoriz(fmt.K)
+        });
+
+        new Chart(document.getElementById('franc26Chart'), {
+            type: 'bar',
+            data: {
+                labels: ['Tier A (4→4)', 'Tier B (17→20)', 'Tier C (11→8)'], datasets: [
+                    {
+                        label: '2025',
+                        data: [377425, 1000887, 324052],
+                        backgroundColor: 'rgba(181,212,244,.8)',
+                        borderRadius: 3
+                    },
+                    {
+                        label: '2026p',
+                        data: [423516, 1131553, 226664],
+                        backgroundColor: 'rgba(24,95,165,.85)',
+                        borderRadius: 3
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+    </script>
+</div>
+</body>
+</html>

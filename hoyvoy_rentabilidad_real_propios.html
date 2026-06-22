@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Franquicia externa vs propia · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 3 de 9',
+        title: 'Franquicia externa vs propia',
+        subtitle: 'Comparativa real de retorno por cada euro: margen 35% de propios vs royalty 8% de franquicias.',
+        meta: ['Datos 2015–2025', ' Fuente: Google Sheets resultado histórico'],
+        kpis: [
+            {label: 'Beneficio propio medio/año', value: '€202K', sub: '35% margen sobre €578K facturación'},
+            {label: 'Royalty franquicia equivalente', value: '€46K', sub: '8% flat, cero riesgo operativo'},
+            {
+                label: 'Ventaja propio a 5 años',
+                value: '+€156K/año',
+                sub: '337% más que la franquicia',
+                valueClass: 'green'
+            },
+            {label: 'Break-even facturación', value: '€140K/año', sub: 'Mínimo para que propio supere franquicia'},
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="chart-card">
+        <div class="chart-title">Beneficio real propio vs equivalente franquicia por centro (€/año)</div>
+        <div class="chart-sub">Con el 35% de margen real vs el 8% de royalty que percibiría el holding como
+            franquiciador.
+        </div>
+        <div style="height:300px">
+            <canvas id="mainChart"></canvas>
+        </div>
+        <div class="chart-legend">
+            <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Beneficio propio (35%)</span>
+            <span class="chart-legend-item"><span class="legend-dot" style="background:#D4537E"></span>Royalty equivalente franquicia (8%)</span>
+        </div>
+    </div>
+
+    <div class="tab-nav" data-tabs id="tabs-ret">
+        <button class="tab-btn" data-tab="r-pl">P&L por centro</button>
+        <button class="tab-btn" data-tab="r-vs">Propio vs Franquicia</button>
+        <button class="tab-btn" data-tab="r-costes">Desglose costes</button>
+    </div>
+
+    <div class="tab-content" id="r-pl">
+        <div class="chart-card">
+            <div class="chart-title">P&L centros propios 2025 — Facturación vs costes vs beneficio (€)</div>
+            <div style="height:280px">
+                <canvas id="plChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot"
+                                                      style="background:#185FA5"></span>Facturación</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:rgba(226,75,74,.6)"></span>Costes totales</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#3B6D11"></span>Beneficio operativo</span>
+            </div>
+        </div>
+        <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Centro</th>
+                    <th>Profes</th>
+                    <th>Facturación</th>
+                    <th>Costes</th>
+                    <th>Beneficio</th>
+                    <th>Margen</th>
+                </tr>
+                </thead>
+                <tbody id="plTable"></tbody>
+                <tfoot>
+                <tr>
+                    <td>TOTAL</td>
+                    <td>47</td>
+                    <td>€5,79M</td>
+                    <td>€3,76M</td>
+                    <td>€2,02M</td>
+                    <td>35,0%</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-content" id="r-vs">
+        <div class="chart-card">
+            <div class="chart-title">Beneficio acumulado 5 años — propio (35%) vs franquicia (8%) según facturación
+                (€)
+            </div>
+            <div style="height:260px">
+                <canvas id="vsChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Propio 35% margen</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#D4537E"></span>Franquicia 8% royalty</span>
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ El propio gana desde €140K de facturación</div>
+            <div class="insight-body">Con margen real del 35%, el propio supera a la franquicia si factura más de
+                €140K/año. Prácticamente cualquier centro en Madrid superará ese umbral en el año 2.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="r-costes">
+        <div class="chart-card">
+            <div class="chart-title">Desglose de costes — personal vs fijos vs vehículos (€ anual)</div>
+            <div style="height:280px">
+                <canvas id="costChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Personal (82%)</span>
+                <span class="chart-legend-item"><span class="legend-dot"
+                                                      style="background:#85B7EB"></span>Fijos (7%)</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#9FE1CB"></span>Vehículos (11%)</span>
+            </div>
+        </div>
+        <div class="insight blue">
+            <div class="insight-title">💡 El personal es el 82% de los costes — y es controlable</div>
+            <div class="insight-body">Los costes fijos (local, suministros, gestoría) son solo el 7%. Los vehículos el
+                11%. El margen se puede optimizar directamente gestionando bien la plantilla.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const centers = ['Barcelona', "L'Hosp.", 'Pamplona', 'Santander', 'Badalona', 'Valladolid', 'Reus', 'Murcia', 'Pozuelo', 'Alcorcón'];
+        const rev = [1264238, 611841, 617998, 666077, 677799, 548718, 531571, 454371, 211761, 201424];
+        const costs = [710220, 359160, 288660, 359580, 501060, 372840, 387660, 316680, 260580, 206580];
+        const profits = [554018, 252681, 329338, 306497, 176739, 175878, 143911, 137691, -48819, -5156];
+        const profes = [9, 4, 3, 5, 7, 4, 5, 4, 3, 3];
+        const staffC = [606420, 281760, 238860, 296580, 410460, 309840, 324660, 253680, 210780, 156780];
+        const fixedC = [37800, 37800, 23400, 23400, 37800, 23400, 23400, 23400, 23400, 23400];
+        const vehC = [66000, 39600, 26400, 39600, 52800, 39600, 39600, 39600, 26400, 26400];
+        const margins = [43.8, 41.3, 53.3, 46.0, 26.1, 32.1, 27.1, 30.3, -23.1, -2.6];
+
+        new Chart(document.getElementById('mainChart'), {
+            type: 'bar',
+            data: {
+                labels: centers, datasets: [
+                    {
+                        label: 'Beneficio propio (35%)',
+                        data: profits,
+                        backgroundColor: profits.map(v => v >= 0 ? 'rgba(24,95,165,.85)' : 'rgba(163,45,45,.75)'),
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Royalty equivalente (8%)',
+                        data: rev.map(v => Math.round(v * .08)),
+                        backgroundColor: 'rgba(212,83,126,.75)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        new Chart(document.getElementById('plChart'), {
+            type: 'bar',
+            data: {
+                labels: centers, datasets: [
+                    {label: 'Facturación', data: rev, backgroundColor: 'rgba(24,95,165,.8)', borderRadius: 3},
+                    {label: 'Costes', data: costs, backgroundColor: 'rgba(226,75,74,.6)', borderRadius: 3},
+                    {
+                        label: 'Beneficio',
+                        data: profits.map(v => Math.max(0, v)),
+                        backgroundColor: 'rgba(59,109,17,.85)',
+                        borderRadius: 3
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        const tbl = document.getElementById('plTable');
+        centers.forEach((c, i) => {
+            const mg = margins[i];
+            const cls = mg > 20 ? 'green' : mg > 0 ? 'amber' : 'red';
+            tbl.innerHTML += `<tr><td class="strong">${c}</td><td>${profes[i]}</td><td>${fmt.K(rev[i])}</td><td>${fmt.K(costs[i])}</td><td style="font-weight:700">${fmt.K(profits[i])}</td><td><span class="badge ${cls}">${mg.toFixed(1)}%</span></td></tr>`;
+        });
+
+        const bills = [100000, 200000, 300000, 400000, 500000, 600000, 800000, 1000000, 1200000];
+        new Chart(document.getElementById('vsChart'), {
+            type: 'line',
+            data: {
+                labels: bills.map(v => fmt.K(v)), datasets: [
+                    {
+                        label: 'Propio 35%',
+                        data: bills.map(b => b * .35 * 5 - 150000),
+                        borderColor: '#185FA5',
+                        backgroundColor: 'rgba(24,95,165,.06)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        fill: true,
+                        tension: .3
+                    },
+                    {
+                        label: 'Franquicia 8%',
+                        data: bills.map(b => b * .08 * 5 + 100000),
+                        borderColor: '#D4537E',
+                        backgroundColor: 'rgba(212,83,126,.06)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        fill: true,
+                        tension: .3
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+
+        new Chart(document.getElementById('costChart'), {
+            type: 'bar',
+            data: {
+                labels: centers, datasets: [
+                    {
+                        label: 'Personal',
+                        data: staffC,
+                        backgroundColor: 'rgba(24,95,165,.85)',
+                        borderRadius: 3,
+                        stack: 's'
+                    },
+                    {
+                        label: 'Fijos',
+                        data: fixedC,
+                        backgroundColor: 'rgba(133,183,235,.85)',
+                        borderRadius: 3,
+                        stack: 's'
+                    },
+                    {
+                        label: 'Vehículos',
+                        data: vehC,
+                        backgroundColor: 'rgba(159,225,203,.85)',
+                        borderRadius: 3,
+                        stack: 's'
+                    }
+                ]
+            },
+            options: opts(fmt.K, {stacked: true})
+        });
+    </script>
+</div>
+</body>
+</html>

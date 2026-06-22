@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Salud del negocio · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 1 de 9',
+        title: 'Salud del negocio',
+        subtitle: 'Visión global de la red Hoyvoy: facturación total, evolución histórica, composición de ingresos del holding y estado de centros propios vs franquicias.',
+        meta: [' 2020–2025', ' 42 centros', ' Facturación + márgenes reales'],
+        kpis: [
+            {
+                label: 'Facturación red 2025',
+                value: '€27,1M',
+                sub: '+10,3% vs 2024 · CAGR 5 años: 12,2%',
+                mod: 'highlight'
+            },
+            {label: 'Ingresos holding 2025', value: '€7,49M', sub: 'Propios €5,79M + Royalties €1,70M'},
+            {label: 'Centros activos', value: '42', sub: '11 propios · 31 franquicias'},
+            {
+                label: 'Proyección holding 2026',
+                value: '€8,5M+',
+                sub: '+13,4% estimado si red mantiene ritmo',
+                valueClass: 'green'
+            },
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-salud">
+        <button class="tab-btn" data-tab="tab-red">Red total</button>
+        <button class="tab-btn" data-tab="tab-holding">Holding</button>
+        <button class="tab-btn" data-tab="tab-centros">Top centros</button>
+        <button class="tab-btn" data-tab="tab-alertas">Alertas globales</button>
+    </div>
+
+    <div class="tab-content" id="tab-red">
+        <div class="chart-card">
+            <div class="chart-title">Facturación total red + ingresos holding 2020–2025 (€)</div>
+            <div class="chart-sub">Barras = facturación bruta de toda la red · Línea = lo que captura el holding</div>
+            <div style="height:280px">
+                <canvas id="netChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#378ADD"></span>Facturación red total</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#3B6D11"></span>Ingresos holding</span>
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ El negocio crece de forma sólida y consistente</div>
+            <div class="insight-body">De €15,2M en 2020 a €27,1M en 2025 — un CAGR del 12,2% durante 5 años. El holding
+                ha pasado de €4,77M a €7,49M (+57%) en el mismo período. El modelo funciona.
+            </div>
+        </div>
+        <div class="insight amber">
+            <div class="insight-title">⚠️ El techo del 8% en royalties es una realidad matemática</div>
+            <div class="insight-body">Incluso si toda la red de franquicias crece un 15% en 2026, el royalty adicional
+                sería solo €255K. Para ganar €1M más en royalties, necesitas €12,5M adicionales de facturación en la red
+                — equivalente a 25 franquicias nuevas maduras.
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tab-holding">
+        <div class="chart-card">
+            <div class="chart-title">Composición ingresos holding — propios vs royalties 2020–2025 (€)</div>
+            <div class="chart-sub">Propios = beneficio operativo neto estimado al 35% de margen</div>
+            <div style="height:260px">
+                <canvas id="holdingChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>Centros propios (~35% margen)</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#9FE1CB"></span>Royalties franquicias (8% flat)</span>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="surface-card">
+                <div class="kpi-label">Propios aportan al holding</div>
+                <div class="kpi-value">77%</div>
+                <div class="kpi-sub">Del beneficio total del holding en 2025</div>
+            </div>
+            <div class="surface-card">
+                <div class="kpi-label">Royalties — ingreso sin coste operativo</div>
+                <div class="kpi-value">€1,70M</div>
+                <div class="kpi-sub">23% del holding. Sin un solo euro de inversión.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tab-centros">
+        <div class="chart-card">
+            <div class="chart-title">Top 10 centros por facturación 2025 — comparativa con 2024 (€)</div>
+            <div style="height:320px">
+                <canvas id="topChart"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#B5D4F4"></span>2024</span>
+                <span class="chart-legend-item"><span class="legend-dot" style="background:#185FA5"></span>2025</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tab-alertas">
+        <div class="insight red">
+            <div class="insight-title">🔴 L'Hospitalet — declive estructural desde 2021</div>
+            <div class="insight-body">Único centro propio que en 2025 factura menos que en 2020 (€739K → €612K). De 8-9
+                profesores a 4. Pérdida de beneficio potencial anual: €129K. Acción inmediata: contratar 5 profesores.
+                ROI 5x.
+            </div>
+        </div>
+        <div class="insight red">
+            <div class="insight-title">🔴 Barcelona — doble señal negativa en 2025</div>
+            <div class="insight-body">−23% en matrículas + −12% en ticket medio simultáneamente. Si continúa en 2026, el
+                beneficio puede caer de €710K proyectado a €500K. Es el centro con más que perder.
+            </div>
+        </div>
+        <div class="insight amber">
+            <div class="insight-title">🟡 Granollers — primera caída tras 5 años de crecimiento</div>
+            <div class="insight-body">Caída −4,8% en 2025 coincidiendo con proceso de incumplimiento contractual activo.
+                Monitorización semanal recomendada.
+            </div>
+        </div>
+        <div class="insight amber">
+            <div class="insight-title">🟡 Alcorcón — 6 años sin alcanzar €300K</div>
+            <div class="insight-body">Centro propio adquirido hace menos de 1 año. Trayectoria errática desde 2020.
+                Requiere intervención operativa específica o reconversión a franquicia.
+            </div>
+        </div>
+        <div class="insight green">
+            <div class="insight-title">✅ Valladolid — recuperación excepcional +44% en 2025</div>
+            <div class="insight-body">Tras dos años difíciles (2022-2023), Valladolid lidera el crecimiento entre los
+                propios. Señal de que la intervención operativa funciona cuando se aplica.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const years = ['2020', '2021', '2022', '2023', '2024', '2025'];
+        const netTotals = [15236418, 19337883, 19736071, 21793435, 24546084, 27065341];
+        const holdingTot = [4766306, 5889013, 5692386, 6232935, 6813516, 7488163];
+        const ownTotals = [3855862, 4719546, 4471196, 4879848, 5271554, 5785799];
+        const royalties = [910444, 1169467, 1221190, 1353087, 1541962, 1702363];
+
+        new Chart(document.getElementById('netChart'), {
+            type: 'bar',
+            data: {
+                labels: years, datasets: [
+                    {
+                        label: 'Red total',
+                        data: netTotals,
+                        backgroundColor: 'rgba(55,138,221,.7)',
+                        borderRadius: 5,
+                        order: 2
+                    },
+                    {
+                        label: 'Holding',
+                        data: holdingTot,
+                        type: 'line',
+                        borderColor: '#3B6D11',
+                        backgroundColor: 'rgba(59,109,17,.07)',
+                        pointBackgroundColor: '#3B6D11',
+                        borderWidth: 2.5,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: .3,
+                        order: 1
+                    }
+                ]
+            },
+            options: opts(fmt.M)
+        });
+
+        new Chart(document.getElementById('holdingChart'), {
+            type: 'bar',
+            data: {
+                labels: years, datasets: [
+                    {
+                        label: 'Propios',
+                        data: ownTotals,
+                        backgroundColor: 'rgba(24,95,165,.85)',
+                        borderRadius: 4,
+                        stack: 's'
+                    },
+                    {
+                        label: 'Royalties',
+                        data: royalties,
+                        backgroundColor: 'rgba(159,225,203,.85)',
+                        borderRadius: 4,
+                        stack: 's'
+                    }
+                ]
+            },
+            options: opts(fmt.M, {stacked: true})
+        });
+
+        const top10 = [
+            {n: 'Glòries', v24: 1234230, v25: 1420262},
+            {n: 'Barcelona', v24: 1234737, v25: 1264238},
+            {n: 'Granollers', v24: 1201350, v25: 1143782},
+            {n: 'Les Corts', v24: 998196, v25: 1102348},
+            {n: 'Girona', v24: 876514, v25: 1051416},
+            {n: 'Sabadell', v24: 887362, v25: 926139},
+            {n: 'Terrassa', v24: 889935, v25: 908864},
+            {n: 'Manresa', v24: 620664, v25: 859828},
+            {n: 'Cornellà', v24: 641424, v25: 852645},
+            {n: 'Castellón', v24: 680715, v25: 844723},
+        ];
+        new Chart(document.getElementById('topChart'), {
+            type: 'bar',
+            data: {
+                labels: top10.map(c => c.n), datasets: [
+                    {
+                        label: '2024',
+                        data: top10.map(c => c.v24),
+                        backgroundColor: 'rgba(181,212,244,.8)',
+                        borderRadius: 4
+                    },
+                    {
+                        label: '2025',
+                        data: top10.map(c => c.v25),
+                        backgroundColor: 'rgba(24,95,165,.85)',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: optsHoriz(fmt.K)
+        });
+    </script>
+</div>
+</body>
+</html>

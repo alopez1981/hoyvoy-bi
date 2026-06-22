@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Franquicias propias: beneficios · Hoyvoy BI</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
+</head>
+<body>
+<script>
+    window.PAGE = {
+        eyebrow: 'Análisis 6 de 9',
+        title: 'Franquicias propias: beneficios',
+        subtitle: 'P&L real de cada centro propio: facturación, costes, margen operativo y tendencia 2025.',
+        meta: [' Datos 2015–2025', ' Fuente: Google Sheets resultado histórico'],
+        kpis: [
+            {label: 'Beneficio total propios 2025', value: '€2,02M', sub: '8 centros en positivo', valueClass: 'green'},
+            {
+                label: 'Mejor margen',
+                value: 'Pamplona 53%',
+                sub: 'El modelo de eficiencia a replicar',
+                valueClass: 'green'
+            },
+            {
+                label: 'Centros en pérdidas',
+                value: '2 / 10',
+                sub: 'Pozuelo (rampa) · Alcorcón (estructural)',
+                valueClass: 'red'
+            },
+            {label: 'Margen medio red propia', value: '35,0%', sub: 'Sobre €5,79M de facturación'},
+        ]
+    };
+</script>
+
+<div id="main-content">
+    <div class="tab-nav" data-tabs id="tabs-rent">
+        <button class="tab-btn" data-tab="r6-ganan">Ganan dinero</button>
+        <button class="tab-btn" data-tab="r6-pierden">Pierden dinero</button>
+        <button class="tab-btn" data-tab="r6-chart">Beneficio por centro</button>
+    </div>
+
+    <div class="tab-content" id="r6-ganan">
+        <p style="font-size:13px;font-weight:700;color:var(--green);margin:0 0 12px">✅ 8 centros que generan
+            beneficio</p>
+        <div id="winCards"></div>
+    </div>
+
+    <div class="tab-content" id="r6-pierden">
+        <p style="font-size:13px;font-weight:700;color:var(--red);margin:0 0 12px">🔴 2 centros en pérdidas</p>
+        <div class="surface-card" style="border-left:4px solid var(--red);margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+                <span style="font-size:15px;font-weight:700">Pozuelo</span>
+                <span class="badge red">−23,1% · Pérdida €49K/año</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;font-size:12px;margin-bottom:10px">
+                <div>
+                    <div class="kpi-label">Facturación</div>
+                    <div style="font-weight:600">€212K</div>
+                </div>
+                <div>
+                    <div class="kpi-label">Costes</div>
+                    <div style="font-weight:600;color:var(--red)">€261K</div>
+                </div>
+                <div>
+                    <div class="kpi-label">Pérdida</div>
+                    <div style="font-weight:600;color:var(--red)">−€49K</div>
+                </div>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);margin:0;line-height:1.5">⏳ Pérdida de inversión, no de
+                negocio. Año 2 de vida. Proyecta €379K en 2026 — si cumple, será rentable con ~€80K de beneficio.
+                Trayectoria correcta: +78% en 2025.</p>
+        </div>
+        <div class="surface-card" style="border-left:4px solid var(--red)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+                <span style="font-size:15px;font-weight:700">Alcorcón</span>
+                <span class="badge red">−2,6% · Pérdida €5K/año</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;font-size:12px;margin-bottom:10px">
+                <div>
+                    <div class="kpi-label">Facturación</div>
+                    <div style="font-weight:600">€201K</div>
+                </div>
+                <div>
+                    <div class="kpi-label">Costes</div>
+                    <div style="font-weight:600;color:var(--red)">€207K</div>
+                </div>
+                <div>
+                    <div class="kpi-label">Pérdida</div>
+                    <div style="font-weight:600;color:var(--red)">−€5K</div>
+                </div>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);margin:0;line-height:1.5">🚨 Este sí es un problema. Año 6 de
+                vida y prácticamente en break-even. Debería estar generando €100K+ de beneficio. Tres caídas en seis
+                años. No es un problema de maduración — es estructural.</p>
+        </div>
+    </div>
+
+    <div class="tab-content" id="r6-chart">
+        <div class="chart-card">
+            <div class="chart-title">Beneficio operativo anual por centro propio 2025 (€)</div>
+            <div style="height:280px">
+                <canvas id="benefChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ownData = [
+            {n: 'Barcelona', rev: 1264238, cost: 710220, profit: 554018, mg: 43.8, profes: 9},
+            {n: 'Pamplona', rev: 617998, cost: 288660, profit: 329338, mg: 53.3, profes: 3},
+            {n: 'Santander', rev: 666077, cost: 359580, profit: 306497, mg: 46.0, profes: 5},
+            {n: "L'Hospitalet", rev: 611841, cost: 359160, profit: 252681, mg: 41.3, profes: 4},
+            {n: 'Valladolid', rev: 548718, cost: 372840, profit: 175878, mg: 32.1, profes: 4},
+            {n: 'Badalona', rev: 677799, cost: 501060, profit: 176739, mg: 26.1, profes: 7},
+            {n: 'Reus', rev: 531571, cost: 387660, profit: 143911, mg: 27.1, profes: 5},
+            {n: 'Murcia', rev: 454371, cost: 316680, profit: 137691, mg: 30.3, profes: 4},
+            {n: 'Pozuelo', rev: 211761, cost: 260580, profit: -48819, mg: -23.1, profes: 3},
+            {n: 'Alcorcón', rev: 201424, cost: 206580, profit: -5156, mg: -2.6, profes: 3},
+        ];
+
+        const wins = ownData.filter(d => d.profit > 0).sort((a, b) => b.profit - a.profit);
+        const winEl = document.getElementById('winCards');
+        wins.forEach(d => {
+            const mgCls = d.mg > 40 ? 'green' : d.mg > 25 ? 'blue' : 'amber';
+            winEl.innerHTML += `<div class="surface-card" style="border-left:4px solid var(--green);margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:14px;font-weight:700">${d.n}</span>
+          <span class="badge ${mgCls}">${d.mg.toFixed(1)}% margen</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;font-size:12px;margin-bottom:8px">
+          <div><div class="kpi-label">Facturación</div><div style="font-weight:600">${fmt.K(d.rev)}</div></div>
+          <div><div class="kpi-label">Costes</div><div style="font-weight:600;color:var(--red)">${fmt.K(d.cost)}</div></div>
+          <div><div class="kpi-label">Beneficio</div><div style="font-weight:600;color:var(--green)">${fmt.K(d.profit)}</div></div>
+          <div><div class="kpi-label">Profes</div><div style="font-weight:600">${d.profes}</div></div>
+        </div>
+        <div style="background:var(--border);border-radius:4px;height:6px"><div style="background:var(--green);width:${d.mg}%;height:100%;border-radius:4px"></div></div>
+      </div>`;
+        });
+
+        new Chart(document.getElementById('benefChart'), {
+            type: 'bar',
+            data: {
+                labels: ownData.map(d => d.n), datasets: [
+                    {
+                        label: 'Beneficio',
+                        data: ownData.map(d => d.profit),
+                        backgroundColor: ownData.map(d => d.profit >= 0 ? 'rgba(59,109,17,.8)' : 'rgba(226,75,74,.8)'),
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: opts(fmt.K)
+        });
+    </script>
+</div>
+</body>
+</html>
