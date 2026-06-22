@@ -6,217 +6,287 @@
     <title>Hoyvoy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon"
-          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230C447C'/><text x='6' y='23' font-size='18' font-weight='900' font-family='system-ui' fill='white'>HV</text></svg>">
     <style>
+        /* ─── LOGIN ─────────────────────────────────────── */
+        .login-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #071E3D 0%, #0C447C 50%, #185FA5 100%);
+            padding: 24px;
+        }
+        .login-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 44px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 24px 64px rgba(0,0,0,.25);
+        }
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .login-logo-mark {
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0C447C, #378ADD);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.5px;
+        }
+        .login-logo-text { font-size: 16px; font-weight: 700; color: #1A1916; line-height: 1.2; }
+        .login-logo-sub  { font-size: 11px; color: #9B9890; letter-spacing: 0.8px; text-transform: uppercase; }
+        .login-title     { font-size: 22px; font-weight: 700; color: #1A1916; margin-bottom: 6px; }
+        .login-subtitle  { font-size: 13px; color: #9B9890; margin-bottom: 28px; line-height: 1.5; }
+        .login-field     { margin-bottom: 16px; }
+        .login-label     { display: block; font-size: 12px; font-weight: 600; color: #5F5D57; margin-bottom: 6px; }
+        .login-input {
+            width: 100%; padding: 11px 14px;
+            border: 1.5px solid #E2DFD8; border-radius: 8px;
+            font-size: 14px; font-family: inherit; color: #1A1916;
+            background: #FAFAF8; outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            box-sizing: border-box;
+        }
+        .login-input:focus {
+            border-color: #185FA5;
+            box-shadow: 0 0 0 3px rgba(24,95,165,.12);
+            background: #fff;
+        }
+        .login-btn {
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg, #0C447C, #185FA5);
+            color: #fff; border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 600; font-family: inherit;
+            cursor: pointer; margin-top: 8px;
+            transition: opacity .15s, transform .1s;
+        }
+        .login-btn:hover  { opacity: .92; }
+        .login-btn:active { transform: scale(.99); }
+        .login-error {
+            display: none;
+            background: #FCEBEB; border: 1px solid #E24B4A; color: #A32D2D;
+            border-radius: 8px; padding: 10px 14px;
+            font-size: 12px; margin-top: 14px; text-align: center;
+        }
+        .login-footer {
+            text-align: center; font-size: 11px;
+            color: #C4C1B8; margin-top: 28px;
+        }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%      { transform: translateX(-8px); }
+            40%      { transform: translateX(8px); }
+            60%      { transform: translateX(-6px); }
+            80%      { transform: translateX(6px); }
+        }
+        .shake { animation: shake .4s ease; }
+
+        /* ─── DASHBOARD ──────────────────────────────────── */
+        .dashboard-wrap { display: none; }
+        .dash-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 54px;
+            background: #0C447C;
+            box-shadow: 0 2px 8px rgba(0,0,0,.18);
+        }
+        .dash-topbar-left { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-mark-top {
+            width: 28px; height: 28px; border-radius: 6px;
+            background: linear-gradient(135deg, #378ADD, #9FE1CB);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800; color: #fff; letter-spacing: -0.5px;
+        }
+        .logo-text-top  { font-size: 13px; font-weight: 600; color: #fff; }
+        .dash-user { display: flex; align-items: center; gap: 12px; font-size: 12px; color: rgba(255,255,255,.65); }
+        .logout-btn {
+            background: none; border: 1px solid rgba(255,255,255,.25); border-radius: 6px;
+            padding: 5px 12px; font-size: 11px; font-family: inherit;
+            color: rgba(255,255,255,.65); cursor: pointer; transition: all .15s;
+        }
+        .logout-btn:hover { border-color: #E24B4A; color: #E24B4A; }
+
+        /* ─── TU CSS ORIGINAL ────────────────────────────── */
         .hero {
             background: linear-gradient(135deg, #0C447C 0%, #185FA5 60%, #1E7BC4 100%);
-            padding: 60px 40px;
-            text-align: center;
-            color: #fff;
+            padding: 60px 40px; text-align: center; color: #fff;
         }
-
-        .hero-title {
-            font-size: 36px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 12px;
-        }
-
-        .hero-sub {
-            font-size: 16px;
-            color: rgba(255, 255, 255, .75);
-            max-width: 560px;
-            margin: 0 auto 32px;
-            line-height: 1.6;
-        }
-
-        .hero-meta {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .hero-meta span {
-            font-size: 13px;
-            color: rgba(255, 255, 255, .6);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
+        .hero-title { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; }
+        .hero-sub { font-size: 16px; color: rgba(255,255,255,.75); max-width: 560px; margin: 0 auto 32px; line-height: 1.6; }
+        .hero-meta { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+        .hero-meta span { font-size: 13px; color: rgba(255,255,255,.6); display: flex; align-items: center; gap: 6px; }
         .grid {
-            display: grid;
-            grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            padding: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px; padding: 40px; max-width: 1200px; margin: 0 auto;
         }
-
         .card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 22px;
-            text-decoration: none;
-            color: inherit;
-            transition: all .2s;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+            padding: 22px; text-decoration: none; color: inherit;
+            transition: all .2s; display: flex; flex-direction: column; gap: 10px;
         }
-
-        .card:hover {
-            border-color: var(--red);
-            box-shadow: 0 8px 24px rgba(12, 68, 124, .12);
-            transform: translateY(-2px);
-        }
-
-        .card-num {
-            width: 28px;
-            height: 28px;
-            border-radius: 7px;
-            background: var(--blue-dark);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .card-desc {
-            font-size: 12px;
-            color: var(--text-2);
-            line-height: 1.5;
-            flex: 1;
-        }
-
-        .card-arrow {
-            font-size: 12px;
-            color: var(--blue-mid);
-            font-weight: 600;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 32px;
-            color: var(--text-3);
-            font-size: 12px;
-            border-top: 1px solid var(--border);
-        }
+        .card:hover { border-color: var(--blue-mid); box-shadow: 0 8px 24px rgba(12,68,124,.12); transform: translateY(-2px); }
+        .card-num { width: 28px; height: 28px; border-radius: 7px; background: var(--blue-dark); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .card-title  { font-size: 15px; font-weight: 700; color: var(--text); }
+        .card-desc   { font-size: 12px; color: var(--text-2); line-height: 1.5; flex: 1; }
+        .card-arrow  { font-size: 12px; color: var(--blue-mid); font-weight: 600; }
+        .footer { text-align: center; padding: 32px; color: var(--text-3); font-size: 12px; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
-<nav class="topbar">
-    <a href="index.html" class="topbar-logo">
-        <div class="logo-mark">HV</div>
-        <div>
-            <div class="logo-text">Hoyvoy a Conducir</div>
-        </div>
-    </a>
-</nav>
 
-<div class="hero">
-    <h1 class="hero-title">Hoy-Voy</h1>
-    <p class="hero-sub">Análisis estratégico completo de la red: 42 centros, 10 años de datos, rentabilidad real y plan
-        de expansión.</p>
-    <div class="hero-meta">
-        <span> Datos 2015–2026</span>
-        <span> 42 centros · 11 propios · 31 franquicias</span>
-        <span> Fuente: Google Sheets resultado histórico</span>
-        <span>️ Actualizado: Junio 2026</span>
+<!-- ═══════════════════════════════════════════════
+     PANTALLA DE LOGIN — visible hasta que autentique
+═══════════════════════════════════════════════ -->
+<div class="login-wrap" id="login-wrap">
+    <div class="login-card" id="login-card-el">
+        <div class="login-logo">
+            <div class="login-logo-mark">HV</div>
+            <div>
+                <div class="login-logo-text">Hoyvoy a Conducir</div>
+                <div class="login-logo-sub">Business Intelligence</div>
+            </div>
+        </div>
+        <h1 class="login-title">Acceso restringido</h1>
+        <p class="login-subtitle">Introduce las credenciales para acceder al panel de análisis interno.</p>
+        <form id="login-form" novalidate>
+            <div class="login-field">
+                <label class="login-label" for="login-email">Email</label>
+                <input class="login-input" type="email" id="login-email"
+                       placeholder="bi@hoyvoy.com" autocomplete="email" required>
+            </div>
+            <div class="login-field">
+                <label class="login-label" for="login-password">Contraseña</label>
+                <input class="login-input" type="password" id="login-password"
+                       placeholder="••••••••" autocomplete="current-password" required>
+            </div>
+            <button class="login-btn" type="submit">Entrar →</button>
+            <div class="login-error" id="login-error"></div>
+        </form>
+        <p class="login-footer">Acceso exclusivo para uso interno · Hoyvoy a Conducir</p>
     </div>
 </div>
 
-<div class="grid">
-    <a href="hoyvoy_business_intelligence_dashboard.html" class="card">
-        <div class="card-num">1</div>
-        <div class="card-title">Salud del negocio</div>
-        <div class="card-desc">Visión global: facturación €27,1M, CAGR 12,2%, composición holding y alertas activas en
-            la red.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_modelo_negocio_estrategico.html" class="card">
-        <div class="card-num">2</div>
-        <div class="card-title">Franquicias propias</div>
-        <div class="card-desc">Modelo estratégico: royalties vs margen propio, maduración de franquicias y escenarios de
-            escala a 5 años.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_rentabilidad_real_propios.html" class="card">
-        <div class="card-num">3</div>
-        <div class="card-title">Franquicia externa vs propia</div>
-        <div class="card-desc">P&L real por centro con costes de plantilla verificados. Margen real: 35%. El propio
-            genera 4,4x más que la franquicia.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_breakeven_centro_propio.html" class="card">
-        <div class="card-num">4</div>
-        <div class="card-title">Cálculo de break-even</div>
-        <div class="card-desc">Facturación mínima para no perder dinero según configuración de plantilla. Formato
-            Pamplona: €289K/año.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_tiempo_400k.html" class="card">
-        <div class="card-num">5</div>
-        <div class="card-title">Tiempo hasta €400K</div>
-        <div class="card-desc">Cuánto tarda un centro en alcanzar €400K de facturación anual. Mediana: 3 años. Alcorcón:
-            6 años sin llegar.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_propios_rentabilidad.html" class="card">
-        <div class="card-num">6</div>
-        <div class="card-title">Franquicias propias: beneficios</div>
-        <div class="card-desc">P&L completo de los 10 centros propios. 8 en positivo. Pamplona: 53% de margen. Pozuelo y
-            Alcorcón en pérdidas.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_proyeccion_2026.html" class="card">
-        <div class="card-num">7</div>
-        <div class="card-title">Proyección 2026</div>
-        <div class="card-desc">Previsión de €4,15M de beneficio holding. Por primera vez los 10 propios en positivo.
-            L'Hospitalet: única caída.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_dinero_perdido_franquicias.html" class="card">
-        <div class="card-num">8</div>
-        <div class="card-title">Dinero dejado de ganar: franquicias</div>
-        <div class="card-desc">€23,5M dejados de ganar 2015–2025. €9,93M cobrados vs €23,5M de potencial. Granollers:
-            €3,4M de estancamiento.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-    <a href="hoyvoy_propios_dinero_perdido.html" class="card">
-        <div class="card-num">9</div>
-        <div class="card-title">Dinero dejado de ganar: propios</div>
-        <div class="card-desc">€3,43M no ganados sobre €12,4M generados (27,7%). Barcelona: €2,72M por no recuperar pico
-            2015. Gap 8,6x menor que franquicias.
-        </div>
-        <div class="card-arrow">Ver análisis →</div>
-    </a>
-</div>
+<!-- ═══════════════════════════════════════════════
+     DASHBOARD — tu contenido original, oculto hasta login
+═══════════════════════════════════════════════ -->
+<div class="dashboard-wrap" id="dashboard-wrap">
 
-<footer class="footer">
-    <p>HOY VOY A CONDUCIR SL · Análisis Lead Data Analyst · Junio 2026</p>
-    <p style="margin-top:6px">Datos extraídos de Google Sheets «resultado histórico» · 42 centros · 2015–2025</p>
-</footer>
+    <!-- Topbar con botón de cerrar sesión -->
+    <nav class="dash-topbar">
+        <a href="index.html" class="dash-topbar-left">
+            <div class="logo-mark-top">HV</div>
+            <div class="logo-text-top">Hoyvoy a Conducir</div>
+        </a>
+        <div class="dash-user">
+            <span id="user-email-display"></span>
+            <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+        </div>
+    </nav>
+
+    <!-- Tu hero original -->
+    <div class="hero">
+        <h1 class="hero-title">Hoy-Voy</h1>
+        <p class="hero-sub">Análisis estratégico completo de la red: 42 centros, 10 años de datos, rentabilidad real y plan de expansión.</p>
+        <div class="hero-meta">
+            <span>📅 Datos 2015–2026</span>
+            <span>🏢 42 centros · 11 propios · 31 franquicias</span>
+            <span>📊 Fuente: Google Sheets resultado histórico</span>
+            <span>🗓️ Actualizado: Junio 2026</span>
+        </div>
+    </div>
+
+    <!-- Tu grid original -->
+    <div class="grid">
+        <a href="hoyvoy_business_intelligence_dashboard.html" class="card">
+            <div class="card-num">1</div>
+            <div class="card-title">Salud del negocio</div>
+            <div class="card-desc">Visión global: facturación €27,1M, CAGR 12,2%, composición holding y alertas activas en la red.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_modelo_negocio_estrategico.html" class="card">
+            <div class="card-num">2</div>
+            <div class="card-title">Franquicias propias</div>
+            <div class="card-desc">Modelo estratégico: royalties vs margen propio, maduración de franquicias y escenarios de escala a 5 años.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_rentabilidad_real_propios.html" class="card">
+            <div class="card-num">3</div>
+            <div class="card-title">Franquicia externa vs propia</div>
+            <div class="card-desc">P&L real por centro con costes de plantilla verificados. Margen real: 35%. El propio genera 4,4x más que la franquicia.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_breakeven_centro_propio.html" class="card">
+            <div class="card-num">4</div>
+            <div class="card-title">Cálculo de break-even</div>
+            <div class="card-desc">Facturación mínima para no perder dinero según configuración de plantilla. Formato Pamplona: €289K/año.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_tiempo_400k.html" class="card">
+            <div class="card-num">5</div>
+            <div class="card-title">Tiempo hasta €400K</div>
+            <div class="card-desc">Cuánto tarda un centro en alcanzar €400K de facturación anual. Mediana: 3 años. Alcorcón: 6 años sin llegar.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_propios_rentabilidad.html" class="card">
+            <div class="card-num">6</div>
+            <div class="card-title">Franquicias propias: beneficios</div>
+            <div class="card-desc">P&L completo de los 10 centros propios. 8 en positivo. Pamplona: 53% de margen. Pozuelo y Alcorcón en pérdidas.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_proyeccion_2026.html" class="card">
+            <div class="card-num">7</div>
+            <div class="card-title">Proyección 2026</div>
+            <div class="card-desc">Previsión de €4,15M de beneficio holding. Por primera vez los 10 propios en positivo. L'Hospitalet: única caída.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_dinero_perdido_franquicias.html" class="card">
+            <div class="card-num">8</div>
+            <div class="card-title">Dinero dejado de ganar: franquicias</div>
+            <div class="card-desc">€23,5M dejados de ganar 2015–2025. €9,93M cobrados vs €23,5M de potencial. Granollers: €3,4M de estancamiento.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+        <a href="hoyvoy_propios_dinero_perdido.html" class="card">
+            <div class="card-num">9</div>
+            <div class="card-title">Dinero dejado de ganar: propios</div>
+            <div class="card-desc">€3,43M no ganados sobre €12,4M generados (27,7%). Barcelona: €2,72M por no recuperar pico 2015. Gap 8,6x menor que franquicias.</div>
+            <div class="card-arrow">Ver análisis →</div>
+        </a>
+    </div>
+
+    <footer class="footer">
+        <p>HOY VOY A CONDUCIR SL · Análisis Lead Data Analyst · Junio 2026</p>
+        <p style="margin-top:6px">Datos extraídos de Google Sheets «resultado histórico» · 42 centros · 2015–2025</p>
+    </footer>
+
+</div><!-- fin dashboard-wrap -->
+
+<script src="js/auth.js"></script>
 <script src="js/utils.js"></script>
-<script src="js/nav.js"></script>
+<script>
+    const loginWrap   = document.getElementById('login-wrap');
+    const dashWrap    = document.getElementById('dashboard-wrap');
+    const userDisplay = document.getElementById('user-email-display');
+
+    function showDashboard() {
+        loginWrap.style.display = 'none';
+        dashWrap.style.display  = 'block';
+        userDisplay.textContent = AUTH.email;
+    }
+
+    // Si ya hay sesión válida, mostrar dashboard directamente
+    if (checkAuth()) {
+        showDashboard();
+    }
+
+    // Submit del formulario
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        handleLoginForm(e);
+        if (checkAuth()) showDashboard();
+    });
+</script>
 </body>
 </html>
