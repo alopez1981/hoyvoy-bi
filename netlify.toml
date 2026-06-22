@@ -1,2 +1,4 @@
 [build]
-  functions = "netlify/functions"
+  base    = "hoyvoy-bi"
+  publish = "hoyvoy-bi"
+  functions = "hoyvoy-bi/netlify/functions"
