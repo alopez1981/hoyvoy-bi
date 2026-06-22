@@ -23,6 +23,9 @@ function checkAuth() {
 }
 
 function login(email, password) {
+    console.log('email:', email);
+    console.log('password:', password);
+    console.log('stored:', AUTH.password);
     return email.trim().toLowerCase() === AUTH.email.toLowerCase()
         && password === AUTH.password;
 }
