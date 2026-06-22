@@ -5,7 +5,7 @@
 
 const AUTH = {
     email: 'bi@hoyvoy.com',   // ← cambiar aquí
-    password: 'Hoyvoyaconducir2026$',     // ← cambiar aquí
+    password: 'Hoyvoy2026$',     // ← cambiar aquí
     sessionHours: 8,
     sessionKey: 'hv_bi_auth',
 };
